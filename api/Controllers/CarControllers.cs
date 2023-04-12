@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using api.Models;
-using api.CRUDFunctions;
+using api.
 using api.Database;
-using api.Interfaces;
 namespace api.Controllers
 {
     [Route("api/[controller]")]
@@ -18,7 +17,7 @@ namespace api.Controllers
         public List<Cars> AllCars = new List<Cars>();
         // GET: api/Course
         [HttpGet]
-        public List<Songs> Get()
+        public List<Cars> Get()
         {
 
             ReadCar ReadObject = new ReadCar();
@@ -35,14 +34,14 @@ namespace api.Controllers
 
         // POST: api/Songs
         [HttpPost] //CREATE
-        public void Post([FromBody] Songs song)
+        public void Post([FromBody] Cars Car)
         {
   
         }
 
         // PUT: api/Songs/5
         [HttpPut("{id}")] //UPDATE
-        public void Put(int id, [FromBody] Songs song)
+        public void Put(int id, [FromBody] Cars Car)
         {
 
         }

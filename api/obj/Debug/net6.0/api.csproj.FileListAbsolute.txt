@@ -1,0 +1,7 @@
+/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/Debug/net6.0/api.csproj.AssemblyReference.cache
+/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/Debug/net6.0/api.GeneratedMSBuildEditorConfig.editorconfig
+/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/Debug/net6.0/api.AssemblyInfoInputs.cache
+/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/Debug/net6.0/api.AssemblyInfo.cs
+/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/Debug/net6.0/api.csproj.CoreCompileInputs.cache
+/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/Debug/net6.0/api.MvcApplicationPartsAssemblyInfo.cs
+/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/Debug/net6.0/api.MvcApplicationPartsAssemblyInfo.cache

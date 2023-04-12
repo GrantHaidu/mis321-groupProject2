@@ -6,34 +6,29 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using api.Models;
-using api.CRUDFunctions;
 using api.Database;
-using api.Interfaces;
 
 namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class CustomerController : ControllerBase
     {
         public List<Cars> AllSongs = new List<Cars>();
         // GET: api/Course
         [HttpGet]
-        public List<Songs> Get()
+        public List<Cars> Get()
         {
 
         }
 
         // GET: api/Songs/5
         [HttpGet("{id}", Name = "Get")]
-        public string GetOne(int id)
-        {
-        
-        }
+       
 
         // POST: api/Songs
         [HttpPost] //CREATE
-        public void Post([FromBody] Songs song)
+        public void Post([FromBody] Customers customers)
         {
   
         }

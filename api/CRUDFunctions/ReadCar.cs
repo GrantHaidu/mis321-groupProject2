@@ -7,19 +7,18 @@ namespace repos.mis321_groupProject2.api.CRUDFunctions
 {
     public class ReadCar
     {
-
-
         public List<Cars> GetCars()
         {
 
-            System.Console.WriteLine("getting songs ....");
+            System.Console.WriteLine("getting cars ....");
             List<Cars> AllCars = new List<Cars>();
             ConnectionString myConnection = new ConnectionString();
             string cs = myConnection.cs;
 
             using var con = new MySqlConnection(cs);
             con.Open();
-            string stm = @"SELECT id, title, artist, DATE_FORMAT(date, '%M %e, %Y %h:%i %p' ) AS format_currentdate, favorited, deleted FROM songs WHERE deleted LIKE 'n' ORDER BY date DESC;";
+
+            string stm = @"SELECT VIN, Make, Model, Year, Price, MpgE, ShortDescrip, eCar, Mile_Range FROM cars ;";
             using var cmd = new MySqlCommand(stm, con);
             using MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -28,24 +27,30 @@ namespace repos.mis321_groupProject2.api.CRUDFunctions
             {
                 while (rdr.Read())
                 {
-                    Songs song = new Songs()
+                    Cars car = new Cars()
                     {
 
-                        SongID = rdr.GetInt32(0),
+                        CarVIN = rdr.GetInt32(0),
 
-                        SongTitle = rdr.GetString(1),
+                        CarMake = rdr.GetString(1),
 
-                        Artist = rdr.GetString(2),
+                        CarModel = rdr.GetString(2),
 
-                        Date = rdr.GetString(3),
+                        CarPrice = rdr.GetDouble(3),
 
-                        Favorited = rdr.GetString(4),
+                        CarYear = rdr.GetInt32(4),
 
-                        Deleted = rdr.GetString(5)
+                        mpgE = rdr.GetInt32(6),
 
+                        ShortDescrip = rdr.GetString(7),
+
+                        eCar = rdr.GetBoolean(8),
+
+                        carRange = rdr.GetInt32(9)
                     };
-                    AllSongs.Add(song);
-                    System.Console.WriteLine(song.ToString());
+
+                    AllCars.Add(car);
+                    System.Console.WriteLine(car.ToString());
 
                 }
                 System.Console.WriteLine("query sucessful");
@@ -56,7 +61,7 @@ namespace repos.mis321_groupProject2.api.CRUDFunctions
             }
 
             con.Dispose();
-            return AllSongs;
+            return AllCars;
         }
     }
 }

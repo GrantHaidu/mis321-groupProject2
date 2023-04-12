@@ -7,14 +7,14 @@ namespace repos.mis321_groupProject2.api.Models
         public string adminPass{ get; set; }
    
         static public int count { get; set; }
-        // public ISaveSong Save {get; set;} 
+        
 
         public Admin()
         {
             
         }
         
-        public override string ToStringAdmin()
+        public string ToStringAdmin()
         {
             return $"{this.adminID}\t{this.adminPass}";
         }

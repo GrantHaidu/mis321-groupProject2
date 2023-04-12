@@ -8,12 +8,11 @@ namespace api.Models
         public string CarMake { get; set; }
         public string CarModel { get; set; }
         public int  CarYear{ get; set; }
-        public string CarPrice { get; set; }
+        public double CarPrice { get; set; }
         public int mpgE  { get; set; }
         public string ShortDescrip { get; set; }
         public bool eCar { get; set; }
          public int carRange { get; set; }
-
         static public int count { get; set; }
         // public ISaveSong Save {get; set;} 
 

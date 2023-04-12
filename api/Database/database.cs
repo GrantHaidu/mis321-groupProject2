@@ -1,8 +1,4 @@
-using System.Data;
-using api.Database;
-using MySql.Data;
 using MySql.Data.MySqlClient;
-
 namespace api.Database
 {
     public class database
@@ -20,12 +16,11 @@ namespace api.Database
 
         }
 
-        //test connection to deployed mysql database by selecting database version
+        //test connection to deployed mysql database by selecting database version
 
- public void TestConnection()
+        public void TestConnection()
 
         {
-
             using var con = new MySqlConnection(cs);
 
             con.Open();
@@ -38,20 +33,35 @@ namespace api.Database
 
             System.Console.WriteLine($"Connection Successful.\nMySql Version: {version}");
 
-            //con.Close();
+            //con.Close();
 
-}
+        }
 
         //make sure database cn be queried properly
 
-        public void TestSongQuery()
+        public void TestCarQuery()
 
         {
             using var con = new MySqlConnection(cs);
 
             con.Open();
 
-            stm = "SELECT id, title, artist, date, favorited, deleted FROM Cars";
+            stm = "SELECT VIN, Make, Model, Year, Price, MpgE, ShortDescrip, eCar, Mile_Range FROM cars";
+
+            using var cmd = new MySqlCommand(stm, con);
+
+            using MySqlDataReader rdr = cmd.ExecuteReader();
+
+        }
+
+        public void TestCustomerQuery()
+
+        {
+            using var con = new MySqlConnection(cs);
+
+            con.Open();
+
+            stm = "SELECT id, fName, lName, phone, email, expDate FROM customers";
 
             using var cmd = new MySqlCommand(stm, con);
 

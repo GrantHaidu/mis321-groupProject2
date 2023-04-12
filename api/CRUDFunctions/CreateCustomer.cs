@@ -1,24 +1,28 @@
 using api.Database;
 using api.Models;
+using MySql.Data;
 using MySql.Data.MySqlClient;
+
 namespace repos.mis321_groupProject2.api.CRUDFunctions
 {
-    public class CreateCar
+    public class CreateCustomer
     {
         private string cs;
-        public CreateCar()
+        public CreateCustomer()
         {
             ConnectionString connectionString = new ConnectionString();
             cs = connectionString.cs;
         }
-        public void CreateOne(Cars myCars)
+
+        //insert new song into database
+        public void CreateOne(Customers myCustomers)
         {
-            System.Console.WriteLine("creating Car ....");
-            System.Console.WriteLine(myCars.ToString());
+            System.Console.WriteLine("creating Customer ....");
+            System.Console.WriteLine(myCustomers.ToString());
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"INSERT INTO cars(VIN,Make,Model,Year,Price,MpgE,ShortDescrip,eCar,Mile_Range) VALUES (@VIN, @Make, @Model, @Year, @Price, @MpgE, @ShortDescrip, @eCar, @Mile_Range)";
+            string stm = @"INSERT INTO customers(id,fName,lName,phone,email,expDate) VALUES (@id, @fName, @lName, @phone, @email, @expDate)";
             using var cmd = new MySqlCommand(stm, con);
             cmd.Prepare();
             try
