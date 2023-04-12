@@ -1,5 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using api.Models;
+using api.Database;
+using api.CRUDFunctions;
+
 
 namespace api.Controllers
 {
@@ -7,37 +16,39 @@ namespace api.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        public List<Cars> AllCars = new List<Cars>();
+        public List<Admin> AllAdmins = new List<Admin>();
         // GET: api/Course
         [HttpGet]
-        public List<Cars> Get()
+        public List<Admin> Get()
         {
-            return 
+            ReadAdmin ReadObject = new ReadAdmin();
+            AllAdmins = ReadObject.GetAdmins();
+            return AllAdmins;
         }
 
-        // GET: api/Cars/5
+        // GET: api/Admins/5
         [HttpGet("{id}", Name = "Get")]
-     
 
-        // POST: api/Cars
+
+        // POST: api/Admins
         [HttpPost] //CREATE
-        public void Post([FromBody] Cars cars)
+        public void Post([FromBody] Admin admins)
         {
-  
+
         }
 
         // PUT: api/Cars/5
         [HttpPut("{id}")] //UPDATE
-        public void Put(int id, [FromBody] Car cars)
+        public void Put(int id, [FromBody] Admin Admins)
         {
 
         }
 
-        // DELETE: api/Cars/5
+        // DELETE: api/Admins/5
         [HttpDelete("{id}")]
-        public void Delete
+        public void Delete(int id)
         {
-           
+            System.Console.WriteLine(id);
         }
     }
-}
+}   

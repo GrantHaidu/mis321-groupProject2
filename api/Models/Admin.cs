@@ -1,4 +1,4 @@
-namespace repos.mis321_groupProject2.api.Models
+namespace api.Models
 {
   
     public class Admin

@@ -2,8 +2,7 @@ using api.Database;
 using api.Models;
 using MySql.Data;
 using MySql.Data.MySqlClient;
-
-namespace repos.mis321_groupProject2.api.CRUDFunctions
+namespace api.CRUDFunctions
 {
     public class CreateCustomer
     {

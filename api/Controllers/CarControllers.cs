@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using api.Models;
-using api.
+using api.CRUDFunctions;
 using api.Database;
 namespace api.Controllers
 {
@@ -25,28 +25,28 @@ namespace api.Controllers
             return AllCars;
         }
 
-        // GET: api/Songs/5
+        // GET: api/Cars/5
         [HttpGet("{id}", Name = "Get")]
         public string GetOne(int id)
         {
             return "value";
         }
 
-        // POST: api/Songs
+        // POST: api/Cars
         [HttpPost] //CREATE
-        public void Post([FromBody] Cars Car)
+        public void Post([FromBody] Cars cars)
         {
   
         }
 
-        // PUT: api/Songs/5
+        // PUT: api/Cars/5
         [HttpPut("{id}")] //UPDATE
-        public void Put(int id, [FromBody] Cars Car)
+        public void Put(int id, [FromBody] Cars cars)
         {
 
         }
 
-        // DELETE: api/Songs/5
+        // DELETE: api/Cars/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

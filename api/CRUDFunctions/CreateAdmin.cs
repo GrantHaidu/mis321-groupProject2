@@ -3,22 +3,22 @@ using api.Models;
 using MySql.Data.MySqlClient;
 namespace api.CRUDFunctions
 {
-    public class CreateCar
+    public class CreateAdmin
     {
         private string cs;
-        public CreateCar()
+        public CreateAdmin()
         {
             ConnectionString connectionString = new ConnectionString();
             cs = connectionString.cs;
         }
-        public void CreateOne(Cars myCars)
+        public void CreateOne(Admin myAdmins)
         {
-            System.Console.WriteLine("creating Car ....");
-            System.Console.WriteLine(myCars.ToString());
+            System.Console.WriteLine("creating Admin ....");
+            System.Console.WriteLine(myAdmins.ToString());
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"INSERT INTO cars(VIN,Make,Model,Year,Price,MpgE,ShortDescrip,eCar,Mile_Range) VALUES (@VIN, @Make, @Model, @Year, @Price, @MpgE, @ShortDescrip, @eCar, @Mile_Range)";
+            string stm = @"INSERT INTO admin(adminid,admin_pass) VALUES (@adminid, @admin_pass)";
             using var cmd = new MySqlCommand(stm, con);
             cmd.Prepare();
             try
@@ -32,7 +32,6 @@ namespace api.CRUDFunctions
 
                 System.Console.WriteLine("unsuccessful");
             }
-
         }
     }
 }

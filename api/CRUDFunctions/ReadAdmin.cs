@@ -5,20 +5,20 @@ using System.Data;
 using api.Database;
 namespace api.CRUDFunctions
 {
-    public class ReadCar
+    public class ReadAdmin
     {
-        public List<Cars> GetCars()
+        public List<Admin> GetAdmins()
         {
 
             System.Console.WriteLine("getting cars ....");
-            List<Cars> AllCars = new List<Cars>();
+            List<Admin> AllAdmins = new List<Admin>();
             ConnectionString myConnection = new ConnectionString();
             string cs = myConnection.cs;
 
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"SELECT VIN, Make, Model, Year, Price, MpgE, ShortDescrip, eCar, Mile_Range FROM cars ;";
+            string stm = @"SELECT adminid, admin_pass FROM admin ;";
             using var cmd = new MySqlCommand(stm, con);
             using MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -27,30 +27,17 @@ namespace api.CRUDFunctions
             {
                 while (rdr.Read())
                 {
-                    Cars car = new Cars()
+                    Admin admins = new Admin()
                     {
 
-                        CarVIN = rdr.GetInt32(0),
+                        adminID = rdr.GetInt32(0),
 
-                        CarMake = rdr.GetString(1),
+                        adminPass = rdr.GetString(1),
 
-                        CarModel = rdr.GetString(2),
-
-                        CarPrice = rdr.GetDouble(3),
-
-                        CarYear = rdr.GetInt32(4),
-
-                        mpgE = rdr.GetInt32(6),
-
-                        ShortDescrip = rdr.GetString(7),
-
-                        eCar = rdr.GetBoolean(8),
-
-                        carRange = rdr.GetInt32(9)
                     };
 
-                    AllCars.Add(car);
-                    System.Console.WriteLine(car.ToString());
+                    AllAdmins.Add(admins);
+                    System.Console.WriteLine(admins.ToString());
 
                 }
                 System.Console.WriteLine("query sucessful");
@@ -61,8 +48,7 @@ namespace api.CRUDFunctions
             }
 
             con.Dispose();
-            return AllCars;
+            return AllAdmins;
         }
     }
 }
-

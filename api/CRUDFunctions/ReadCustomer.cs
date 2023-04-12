@@ -2,7 +2,7 @@ using api.Models;
 using api.Database;
 using MySql.Data.MySqlClient;
 
-namespace repos.mis321_groupProject2.api.CRUDFunctions
+namespace api.CRUDFunctions
 {
     public class ReadCustomer
     {

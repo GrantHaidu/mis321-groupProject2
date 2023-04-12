@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using api.Models;
 using api.Database;
+using api.CRUDFunctions;
 
 namespace api.Controllers
 {
@@ -14,33 +15,35 @@ namespace api.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        public List<Cars> AllSongs = new List<Cars>();
+        public List<Customers> AllCustomers = new List<Customers>();
         // GET: api/Course
         [HttpGet]
-        public List<Cars> Get()
+        public List<Customers> Get()
         {
+            ReadCustomer ReadObject = new ReadCustomer();
+            AllCustomers = ReadObject.GetCustomers();
+            return AllCustomers;
+        }       
 
-        }
-
-        // GET: api/Songs/5
+        // GET: api/Customers/5
         [HttpGet("{id}", Name = "Get")]
        
 
-        // POST: api/Songs
+        // POST: api/customers
         [HttpPost] //CREATE
         public void Post([FromBody] Customers customers)
         {
   
         }
 
-        // PUT: api/Songs/5
+        // PUT: api/Customers/5
         [HttpPut("{id}")] //UPDATE
-        public void Put(int id, [FromBody] Songs song)
+        public void Put(int id, [FromBody] Customers customers)
         {
 
         }
 
-        // DELETE: api/Songs/5
+        // DELETE: api/Customers/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
