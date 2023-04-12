@@ -211,6 +211,7 @@ let renderAdmin = function () {
   let html = `<div class="row">`;
   cars.forEach(function (car, index) {
     {
+      if(car.isDeleted == false){
       html += `
       <table> 
         <tbody>
@@ -221,17 +222,16 @@ let renderAdmin = function () {
                 <p contenteditable="true">${car.shortDesc}</p>
               </td>
               <td class="Aprice" contenteditable="true"><strong>$${car.carPrice}</strong></td>
-              <td style="text-align: center;">
-               
-                <p onclick="deleteCar('${car.vinID}')" id="delete-button" class="btn btn-primary">Delete</p>
+              <td style="text-align: center;">  
+                <button onclick="deleteCar(${car.vinID})" id="delete-button" class="btn btn-primary">Delete</button>
                 <br>
                 <button type="button" class="btn btn-outline-primary save-btn">Save</button>
               </td>
           </tr>
         <tbody>
       <table>`
-          ;
     }
+  }
   });
   html += `</div>`;
   document.getElementById("Acar").innerHTML = html;
@@ -239,48 +239,41 @@ let renderAdmin = function () {
   localStorage.setItem("AllMyCars", JSON.stringify(cars));
 };
 
-// function deleteListener{
 
 
-// }
-
-
-function deleteSong(myID) {
+function deleteCar(myID) {
+  console.log("In delete car 2")
+  console.log(myID)
+  let newCar = 1;
 
   for(var i = 0; i < cars.length; i++){
       if(myID == cars[i].vinID){
-        cars[i].isDeleted == true 
-        }
-      }
-      renderAdmin()
+          newCar = {
+              "carImg": cars[i].vinID,
+              "vinID": cars[i].vinID,
+              "carName" : cars[i].carName, 
+              "carPrice" : cars[i].carPrice, 
+              "shortDesc": cars[i].shortDesc,
+              "range": cars[i].range,
+              "horsePower": cars[i].horsePower,
+              "drive": cars[i].drive,
+              "transmission": cars[i].transmission,
+              "color": cars[i].color,
+              "seat": cars[i].seat,
+              "isDeleted": true
+            }
+    }
+    //put method will need to go here
+  renderAdmin()
+  console.log("In delete car 2")
+}
 }
 
-            // const updateCar = {
-            //   ...car, 
-              // "carImg": cars[i].vinID,
-              // "vinID": cars[i].vinID,
-              // "carName" : cars[i].carName, 
-              // "carPrice" : cars[i].carPrice, 
-              // "shortDesc": cars[i].shortDesc,
-              // "range": cars[i].range,
-              // "horsePower": cars[i].horsePower,
-              // "drive": cars[i].drive,
-              // "transmission": cars[i].transmission,
-              // "color": cars[i].color,
-              // "seat": cars[i].seat,
-              // "isDeleted": true
   
-  // await fetch(`${URL}/${newSong.songID}`, {
-  // method: "PUT",
-  // headers: {
-  //     accept: "*/*",
-  //     "content-type": "application/json",
-  // },
-  // body: JSON.stringify(newSong),
-  // });
 
+
+       
   
-// }
 
 
 //THIS WILL ADD THE CAR AND STORE IT IN LOCAL STORAGE
@@ -375,54 +368,9 @@ function handleOnLoad(){
 
 
 
-// document.querySelector('#new-car').addEventListener('submit',function(e){
-
-    
-
-
-  // 
-
-    
-//     e.preventDefault()// prevents refresh
-//     var date = new Date()
-//     songs.unshift({
-//         carImg: "./resources/img/F150.png",
-//         vinID: 2,
-//         carName: e.target.elements.carName.value, 
-//         carPrice: e.target.elements.carPrice.value, 
-//         shortDesc: e.target.elements.shortDescript.value, 
-//         range: e.target.elements.travelRange.value,
-//         horsePower: e.target.elements.horsePower.value,
-//         drive: "4wd",
-//         transmission: "Automatic",
-//         color: e.target.elements.carColor.value 
-//     })
-
-//     renderCars(cars)
-//     blankFields()
-// })
 
 
 
 
 
 
-
-//THIS GETS CALLED IN HTML
-
-//  const closeModalButtons = carModal.querySelectorAll("[data-close]");
-//  const modalBackdrop = document.querySelector(".modal-backdrop");
-
-//  closeModalButtons.forEach(function(button) {
-//    button.addEventListener("click", function() {
-//      myModal.style.display = "none";
-//      myModal.classList.remove("show");
-//      document.body.classList.remove("modal-open");
-//    });
-//});
-
-//  myModal.addEventListener("click", function(event) {
-//    if (event.target === myModal) {
-//      myModal.style.display = "none";
-//      myModal.classList.remove("show");
-//      document.body.classList.remove("modal-open");
