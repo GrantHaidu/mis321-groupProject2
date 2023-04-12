@@ -2,28 +2,30 @@ let cars =[
     {
     carImg : "./resources/img/tesla.png",
     vinID : 1,
-    carName : "Tesla Model S", 
+    carName : "2022 Tesla Model S", 
     carPrice : "89,990", 
     shortDesc: "The Tesla Model S is an electric luxury sedan with impressive performance, advanced technology, and a sleek design.",
     range: "405 Miles",
-    horsePower: "400 horses",
+    horsePower: 400,
     drive: "4wd",
     transmission: "Automatic",
     color: "Pearl White Multi-Coat",
+    Mpg: 30,
     seat: "5",
     isDeleted: false
     },
     {
       carImg : "./resources/img/R1T.png",
       vinID : 2,
-      carName : "Rivian R1T", 
+      carName : "2022 Rivian R1T", 
       carPrice : "74,075", 
       shortDesc: "The R1T is an electric pickup truck produced by Rivian Automotive, featuring all-wheel drive, up to 400+ miles of range, and various advanced technologies and off-road capabilities.",
       range: "400 Miles",
-      horsePower: "600 horses",
+      horsePower: 600,
       drive: "4wd",
       transmission: "Automatic",
       color: "LA Silver",
+      Mpg: 30,
       seat: "5",
       isDeleted: false
     },
@@ -104,6 +106,7 @@ async function editCar(vinID) {
                     <div id="features">
                       <h1 class="name"><strong>${car.carName}</strong></h1>
                       <p><strong>$${car.carPrice}</strong></p>
+                      <p>Miles per Gallon: ${car.Mpg}</p>
                       <p>Travel Range: ${car.range}</p>
                       <p>Horsepower: ${car.horsePower}</p>
                       <p>Drive: ${car.drive}</p>
@@ -197,6 +200,7 @@ async function editCar(vinID) {
             horsePower: document.getElementById('horse-power').value,
             drive: document.getElementById('drive').value,
             transmission: document.getElementById('transmission').value,
+            Mpg: document.getElementById('mpg').value,
             carColor: document.getElementById('car-color').value,
             seat: document.getElementById('car-seat').value
         };
@@ -209,28 +213,56 @@ async function editCar(vinID) {
 
 let renderAdmin = function () {
   let html = `<div class="row">`;
-  cars.forEach(function (car, index) {
+  cars.forEach(function (car) {
     {
       if(car.isDeleted == false){
       html += `
       <table> 
         <tbody>
           <tr>
-              <td class="Aimg"><img src="${car.carImg}" alt="${car.carName}"></td>
+              <td id="Aimg"><img src="${car.carImg}" alt="${car.carName}"></td>
               <td class="Adescription">
-                <h1 class="Aname" contenteditable="true"><strong>${car.carName}</strong></h1>
-                <p contenteditable="true">${car.shortDesc}</p>
+              <p><strong>Year, Make, Model:</strong></p> 
+                <p id="Aname" contenteditable="true">${car.carName}</p>
+                <p><strong>Description:</strong></p> 
+                <p id="Ashort-desc" contenteditable="true">${car.shortDesc}</p>
+                <p><strong>Range:</strong></p>
+                <p id="Arange" contenteditable="true"> ${car.range}</p>
+                <p><strong>Horsepower:</strong></p> 
+                <p id="Ahorse-power" contenteditable="true"> ${car.horsePower}</p>
+                <p><strong>Drive:</strong></p> 
+                <p id="Adrive" contenteditable="true"> ${car.drive}</p>
+                <p><strong>Transmission:</strong></p> 
+                <p id="Atransmission" contenteditable="true"> ${car.transmission}</p>
+                <p><strong>Car MPGE:</strong></p>
+                <p id="Ampg" contenteditable="true"> ${car.Mpg}</p>
+                <p><strong>Number of Seats:</strong></p>
+                <p id="Acar-color" contenteditable="true"> ${car.seat}</p>
+                <p><strong>Car Color:</strong></p>
+                <p id="Acar-seat" contenteditable="true"> ${car.color}</p>
+                
               </td>
-              <td class="Aprice" contenteditable="true"><strong>$${car.carPrice}</strong></td>
+              
+              <td 
+              <p><strong>Price:</strong></p>
+              <p id="Aprice" contenteditable="true">$${car.carPrice}</p>
+              </td>
               <td style="text-align: center;">  
                 <button onclick="deleteCar(${car.vinID})" id="delete-button" class="btn btn-primary">Delete</button>
                 <br>
-                <button type="button" class="btn btn-outline-primary save-btn">Save</button>
+                <button onclick="editCar(${car.vinID}) type="button" class="btn btn-outline-primary save-btn">Save</button>
               </td>
           </tr>
         <tbody>
       <table>`
     }
+    // 1. range// travel-range
+    // 2. horsePower// horse-power
+    // 3. drive// drive 
+    // 4. transmission// transmission
+    // 5. color// car-color
+    // 6. Mpg// mpg
+    // 7. seat// car-seat
   }
   });
   html += `</div>`;
@@ -249,16 +281,17 @@ function deleteCar(myID) {
   for(var i = 0; i < cars.length; i++){
       if(myID == cars[i].vinID){
           newCar = {
-              "carImg": cars[i].vinID,
-              "vinID": cars[i].vinID,
-              "carName" : cars[i].carName, 
+              "carImg": cars[i].vinID, 
+              "vinID": cars[i].vinID, 
+              "carName" : cars[i].carName,
               "carPrice" : cars[i].carPrice, 
-              "shortDesc": cars[i].shortDesc,
-              "range": cars[i].range,
-              "horsePower": cars[i].horsePower,
+              "shortDesc": cars[i].shortDesc, 
+              "range": cars[i].range, 
+              "horsePower": cars[i].horsePower, 
               "drive": cars[i].drive,
               "transmission": cars[i].transmission,
               "color": cars[i].color,
+              "Mpg": cars[i].Mpg,
               "seat": cars[i].seat,
               "isDeleted": true
             }
@@ -269,6 +302,45 @@ function deleteCar(myID) {
 }
 }
 
+function editCar(myID) {
+  console.log("In edit car 1(start)")
+  console.log(myID)
+  const updateImg = document.getElementById('Aimg').value;
+  const updateName = document.getElementById('Aname').value;
+  const updateShortDesc = document.getElementById('Ashort-desc').value;
+  const updatePrice = document.getElementById('Aprice').value;
+  const updateRange = document.getElementById('Arange').value;
+  const updateHorsepower = document.getElementById('Ahorse-power').value;
+  const updateDrive = document.getElementById('Adrive').value;
+  const updateTrans = document.getElementById('Atransmission').value;
+  const updateMpg = document.getElementById('Ampg').value;
+  const updateColor = document.getElementById('Acar-color').value;
+  const updateSeat = document.getElementById('Acar-seat').value;
+
+  let newCar = 1;
+
+  for(var i = 0; i < cars.length; i++){
+      if(myID == cars[i].vinID){
+          newCar = {
+            ...cars, 
+              "carImg": updateImg,
+              "carName" : updateName, 
+              "carPrice" : updatePrice, 
+              "shortDesc": updateShortDesc,
+              "range": updateRange,
+              "horsePower": updateHorsepower,
+              "drive": updateDrive,
+              "transmission": updateTrans,
+              "color": updateColor,
+              "Mpg": updateMpg,
+              "seat": updateSeat,
+            }
+    }
+    //put method will need to go here
+  renderAdmin()
+  console.log("In edit car 2(finish)")
+}
+}
   
 
 
@@ -294,6 +366,7 @@ const addCarForm = document.getElementById('new-car'); addCarForm.addEventListen
       range: e.target.elements.travelRange.value,
       horsePower: e.target.elements.horsePower.value,
       drive: e.target.elements.drive.value,
+      Mpg: e.target.elements.Mpg.value,
       transmission: e.target.elements.transmission.value,
       color: e.target.elements.carColor.value
     }
