@@ -27,7 +27,11 @@ namespace api.Controllers
         }
 
         // GET: api/Admins/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "Admin")]
+        public string GetOne(int id)
+        {
+            return "value";
+        }
 
 
         // POST: api/Admins
@@ -37,7 +41,7 @@ namespace api.Controllers
 
         }
 
-        // PUT: api/Cars/5
+        // PUT: api/Admin/5
         [HttpPut("{id}")] //UPDATE
         public void Put(int id, [FromBody] Admin Admins)
         {
@@ -51,4 +55,4 @@ namespace api.Controllers
             System.Console.WriteLine(id);
         }
     }
-}   
+}

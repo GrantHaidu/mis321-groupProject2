@@ -23,17 +23,21 @@ namespace api.Controllers
             ReadCustomer ReadObject = new ReadCustomer();
             AllCustomers = ReadObject.GetCustomers();
             return AllCustomers;
-        }       
+        }
 
         // GET: api/Customers/5
-        [HttpGet("{id}", Name = "Get")]
-       
+        [HttpGet("{id}", Name = "Coustomer")]
+        public string GetOne(int id)
+        {
+            return "value";
+        }
+
 
         // POST: api/customers
         [HttpPost] //CREATE
         public void Post([FromBody] Customers customers)
         {
-  
+
         }
 
         // PUT: api/Customers/5

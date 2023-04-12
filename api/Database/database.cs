@@ -46,7 +46,7 @@ namespace api.Database
 
             con.Open();
 
-            stm = "SELECT VIN, Make, Model, Year, Price, MpgE, ShortDescrip, eCar, Mile_Range FROM cars";
+            stm = "SELECT VIN, carName, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color,seat, isDeleted FROM cars";
 
             using var cmd = new MySqlCommand(stm, con);
 

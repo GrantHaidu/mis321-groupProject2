@@ -18,7 +18,7 @@ namespace api.CRUDFunctions
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"INSERT INTO cars(VIN,Make,Model,Year,Price,MpgE,ShortDescrip,eCar,Mile_Range) VALUES (@VIN, @Make, @Model, @Year, @Price, @MpgE, @ShortDescrip, @eCar, @Mile_Range)";
+            string stm = @"INSERT INTO cars(VIN, carName, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color,seat, isDeleted)VALUES (@VIN, @carName, @Price, @Mpg, @ShortDescrip, @Mile_Range, @horse_power, @drive, @transmission, @color, @seat, @isDeleted)";
             using var cmd = new MySqlCommand(stm, con);
             cmd.Prepare();
             try

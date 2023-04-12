@@ -15,7 +15,7 @@ namespace api.Models
             
         }
         
-        public string ToStringCust()
+        public override string ToString()
         {
             return $"{this.custID}\t{this.customerFirstName}\t{this.customerLastName}\t{this.customerPhone}\t{this.customerEmail}\t{this.expDate}";
         }

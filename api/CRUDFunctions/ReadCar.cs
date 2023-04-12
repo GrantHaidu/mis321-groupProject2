@@ -18,7 +18,7 @@ namespace api.CRUDFunctions
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"SELECT VIN, Make, Model, Year, Price, MpgE, ShortDescrip, eCar, Mile_Range FROM cars ;";
+            string stm = @"SELECT VIN, carName, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color,seat, isDeleted FROM cars ;";
             using var cmd = new MySqlCommand(stm, con);
             using MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -32,21 +32,27 @@ namespace api.CRUDFunctions
 
                         CarVIN = rdr.GetInt32(0),
 
-                        CarMake = rdr.GetString(1),
+                        carName = rdr.GetString(1),
 
-                        CarModel = rdr.GetString(2),
+                        carPrice = rdr.GetDouble(2),
 
-                        CarPrice = rdr.GetDouble(3),
+                        mpg = rdr.GetInt32(3),
 
-                        CarYear = rdr.GetInt32(4),
+                        shortDescrip = rdr.GetString(4),
 
-                        mpgE = rdr.GetInt32(6),
+                        carRange = rdr.GetInt32(5),
 
-                        ShortDescrip = rdr.GetString(7),
+                        horsePower = rdr.GetInt32(6),
 
-                        eCar = rdr.GetBoolean(8),
+                        drive = rdr.GetString(7),
 
-                        carRange = rdr.GetInt32(9)
+                        transmission = rdr.GetString(8),
+
+                        color= rdr.GetString(9),
+
+                        seat = rdr.GetInt32(10),
+
+                        isDeleted =  rdr.GetBoolean(11)
                     };
 
                     AllCars.Add(car);

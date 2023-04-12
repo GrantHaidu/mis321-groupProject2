@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Cors;
 using api.Models;
 using api.CRUDFunctions;
 using api.Database;
+
+
 namespace api.Controllers
 {
     [Route("api/[controller]")]
@@ -26,7 +28,7 @@ namespace api.Controllers
         }
 
         // GET: api/Cars/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "Cars")]
         public string GetOne(int id)
         {
             return "value";
@@ -36,7 +38,7 @@ namespace api.Controllers
         [HttpPost] //CREATE
         public void Post([FromBody] Cars cars)
         {
-  
+
         }
 
         // PUT: api/Cars/5
