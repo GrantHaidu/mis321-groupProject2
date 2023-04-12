@@ -180,4 +180,23 @@ align-content: right;
 border: none;
 }
 
+.Aimg {
+  width: 200px;
+  height: 200px;
+  margin-right: 2px;
+}
 
+.Adescription {
+  width: 50%;
+  margin-left: 2px;
+}
+
+.Aname {
+  margin: 0;
+}
+
+.Aprice {
+  padding-top: 50px;
+  font-size: xx-large;
+  text-align: center;
+}

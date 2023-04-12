@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./resources/styles/index.css">
     <title>TEA</title>
 </head>
-<body>
+<body onload="renderAdmin()">
     <nav>
         <div class="logo">
           <a href="#">TEA</a>
@@ -88,7 +88,7 @@
           </form>
         </div>
         
-        <div class="row">
+        <div id="Acar" class="row">
           <table>
         <thead>
           <tr>
@@ -99,21 +99,6 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="img" contenteditable="true"><img src="car1.jpg" alt="Car Image"></td>
-            <td class="description" contenteditable="true">
-              <h1 class="name" contenteditable="true"><strong>Car name</strong></h1>
-              <p>Enter Short Description Here</p>
-            </td>
-            <td class="price" contenteditable="true">
-              <strong>$25,000</strong>
-            </td>
-            <td style="text-align: center;">
-              <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#carModal">Delete</button>
-              <br>
-              <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#availModal">Save</button>
-            </td>
-          </tr>
           
         </tbody>
       </table> 

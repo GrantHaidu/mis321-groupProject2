@@ -10,7 +10,8 @@ let cars =[
     drive: "4wd",
     transmission: "Automatic",
     color: "Pearl White Multi-Coat",
-    seat: "5"
+    seat: "5",
+    isDeleted: false
     },
     {
       carImg : "./resources/img/R1T.png",
@@ -23,7 +24,8 @@ let cars =[
       drive: "4wd",
       transmission: "Automatic",
       color: "LA Silver",
-      seat: "5"
+      seat: "5",
+      isDeleted: false
     },
   
 ]
@@ -41,6 +43,25 @@ function readInFile(){
     }
 }
 
+function submitAvailForm(id){
+  console.log("form submitted");
+  let name = document.getElementById(`floatingName-${id}`).value;
+  let email = document.getElementById(`floatingEmail-${id}`).value;
+
+  console.log(name);
+  console.log(email);
+
+  // post the info to api
+
+  document.getElementById(`floatingName-${id}`).value = "";
+  document.getElementById(`floatingEmail-${id}`).value = "";
+}
+
+async function editCar(vinID) {
+
+  
+}
+
 //THIS WILL BE THE HOME SCTRUCTURE FOR THE CARS
  let renderCars = function() {
     
@@ -48,6 +69,7 @@ function readInFile(){
     cars.forEach(function(car, index)
     {
         {  
+          if(car.isDeleted == false){
         html += `
             
         <table> 
@@ -62,14 +84,14 @@ function readInFile(){
                     <strong>$${car.carPrice}</strong>
                 </td>
                 <td style="text-align: center;">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#carModal">View Details</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#carModal-${car.vinID}">View Details</button>
                     <br>
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#availModal">Check Availability</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#availModal-${car.vinID}">Check Availability</button>
                 </td>
             </tr>
             
           
-            <div class="modal fade" id="carModal" 
+            <div class="modal fade" id="carModal-${car.vinID}" 
             tabindex="-1" aria-labelledby="carModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -124,11 +146,11 @@ function readInFile(){
           <div class="modal-backdrop fade show"></div>
           </div>
 
-          <div class="modal fade" id="availModals" tabindex="-1" aria-labelledby="availModalLabel" aria-hidden="true">
+          <div class="modal fade" id="availModal-${car.vinID}" tabindex="-1" aria-labelledby="availModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <center><h5 class="modal-title" id="availModalLabel">Car Availability</h5></center>
+              <center><h5 class="modal-title" id="availModalLabel-${car.vinID}">Car Availability</h5></center>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -136,14 +158,14 @@ function readInFile(){
             <br
             <form class="">
               <div class="form-floating mb-3">
-                <input type="email" class="form-control rounded-3" id="floatingInput" placeholder="First Last">
+                <input type="email" class="form-control rounded-3" id="floatingName-${car.vinID}" placeholder="First Last">
                 <label for="floatingInput">Full Name</label>
               </div>
               <div class="form-floating mb-3">
-                <input type="password" class="form-control rounded-3" id="floatingPassword" placeholder="name@email.com">
+                <input type="text" class="form-control rounded-3" id="floatingEmail-${car.vinID}" placeholder="name@email.com">
                 <label for="floatingPassword">Email</label>
               </div>
-              <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Submit</button>
+              <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" onclick="submitAvailForm(${car.vinID})" data-bs-toggle="modal" data-bs-target="#availModal-${car.vinID}">Submit</button>
               <center><small class="text-muted">Check inbox to view availability on this vehicle</small></center>
             </form>
           </div>
@@ -152,6 +174,7 @@ function readInFile(){
             </table>
  `
         }
+      }
     })
     
   
@@ -184,73 +207,79 @@ function readInFile(){
 }
 
 
-// function viewDetails(cars, myID) {
-//   let html = `<div class="row">`  
-//   for(var i = 0; i < cars.length; i++){
-//       if(cars[i].vinID == myID){
-//         {
-//         html += `
-//           <div class="modal fade" id="carModal" 
-//           tabindex="-1" aria-labelledby="carModalLabel" aria-hidden="true">
-//           <div class="modal-dialog">
-//             <div class="modal-content">
-//               <div class="modal-header">
-//                 <center><h5 class="modal-title" id="carModalLabel">Car Details</h5></center>
-//                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-//               </div>
-//               <div class="modal-body p-5 pt-0">
-//                 <div class="row">
-//                   <div id="features">
-//                     <h1 class="name"><strong>${cars[i].carName}</strong></h1>
-//                     <p><strong>$${cars[i].carPrice}</strong></p>
-//                     <p>Travel Range: ${cars[si].range}</p>
-//                     <p>Horsepower: ${cars[i].horsePower}</p>
-//                     <p>Drive: ${cars[i].drive}</p>
-//                     <p>Transmission: ${cars[i].transmission}</p>
-//                     <p>Color: ${cars[i].color}</p>
-//                     <p>Seats up to: ${cars[i].seat}</p>
-//                     <hr>
+let renderAdmin = function () {
+  let html = `<div class="row">`;
+  cars.forEach(function (car, index) {
+    {
+      html += `
+      <table> 
+        <tbody>
+          <tr>
+              <td class="Aimg"><img src="${car.carImg}" alt="${car.carName}"></td>
+              <td class="Adescription">
+                <h1 class="Aname" contenteditable="true"><strong>${car.carName}</strong></h1>
+                <p contenteditable="true">${car.shortDesc}</p>
+              </td>
+              <td class="Aprice" contenteditable="true"><strong>$${car.carPrice}</strong></td>
+              <td style="text-align: center;">
+               
+                <p onclick="deleteCar('${car.vinID}')" id="delete-button" class="btn btn-primary">Delete</p>
+                <br>
+                <button type="button" class="btn btn-outline-primary save-btn">Save</button>
+              </td>
+          </tr>
+        <tbody>
+      <table>`
+          ;
+    }
+  });
+  html += `</div>`;
+  document.getElementById("Acar").innerHTML = html;
 
-//                   <div class="compare">
-//                   <center>
-//                       <h4>Compare to Generic Gas Car</h4>
-//                       <form id="compareForm">
-//                       <div class="form-group">
-//                         <label for="avgMiles">Average Miles Driven Per Year:</label>
-//                         <p style="color: gray;"> 13,500 Miles <p/>
-//                       </div>
-//                       <div class="form-group">
-//                         <label for="gasPrice">Average Gas Price in Your Area:</label>
-//                         <p style="color: gray;"> $3.150<p/>
-//                       </div>
-//                       <div class="form-group">
-//                         <label for="yearsDriven">Years Intended to Drive:</label>
-//                         <p style="color: gray;"> 12 Years <p/>
-//                       </div>
-//                       <div class="form-group">
-//                         <label for="electricCost">Average Cost of Electric:</label>
-//                         <p style="color: gray;"> 1,214 kWh = $154.30 <p/>
-//                       </div>
-//                       <button type="submit" class="btn btn-primary">Compare</button>
-//                     </form>
-//                   </center>
-//                 </div>
-                    
-//                   </div>
-//                 </div>
-//               </div> 
-//               </div>         
-//             </div>
-//           </div>
-//         <div class="modal-backdrop fade show"></div>
-//         </div>`
-//         }
-          
-//       }
+  localStorage.setItem("AllMyCars", JSON.stringify(cars));
+};
 
-//   }
+// function deleteListener{
 
-//   renderCars(cars)
+
+// }
+
+
+function deleteSong(myID) {
+
+  for(var i = 0; i < cars.length; i++){
+      if(myID == cars[i].vinID){
+        cars[i].isDeleted == true 
+        }
+      }
+      renderAdmin()
+}
+
+            // const updateCar = {
+            //   ...car, 
+              // "carImg": cars[i].vinID,
+              // "vinID": cars[i].vinID,
+              // "carName" : cars[i].carName, 
+              // "carPrice" : cars[i].carPrice, 
+              // "shortDesc": cars[i].shortDesc,
+              // "range": cars[i].range,
+              // "horsePower": cars[i].horsePower,
+              // "drive": cars[i].drive,
+              // "transmission": cars[i].transmission,
+              // "color": cars[i].color,
+              // "seat": cars[i].seat,
+              // "isDeleted": true
+  
+  // await fetch(`${URL}/${newSong.songID}`, {
+  // method: "PUT",
+  // headers: {
+  //     accept: "*/*",
+  //     "content-type": "application/json",
+  // },
+  // body: JSON.stringify(newSong),
+  // });
+
+  
 // }
 
 
@@ -259,12 +288,13 @@ const addCarForm = document.getElementById('new-car'); addCarForm.addEventListen
   event.preventDefault();
   const carImg = document.getElementById('car-img').files[0]; // get the selected image file
   var reader = new FileReader(); // create a FileReader object
+  count = 100500;
   reader.onload = function() {
     // when the file is loaded, store the base64 encoded image data in the cars array
 
     const newCar = {
       carImg: reader.result,
-      vinID: 2,
+      vinID: count + 1,
       carName: e.target.elements.carName.value,
       carPrice: e.target.elements.carPrice.value,
       shortDescript: e.target.elements.shortDescript.value,
@@ -280,6 +310,7 @@ const addCarForm = document.getElementById('new-car'); addCarForm.addEventListen
     blankFields();
   };
   reader.readAsDataURL(carImg); // read the image file as a data URL
+  count++;
 });
 
 function handleOnLoad(){
@@ -292,7 +323,7 @@ function handleOnLoad(){
 
 
 
-
+// <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#carModal">Delete</button>
 
 
 
@@ -349,7 +380,7 @@ function handleOnLoad(){
     
 
 
-
+  // 
 
     
 //     e.preventDefault()// prevents refresh
