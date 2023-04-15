@@ -45,8 +45,9 @@ namespace api.Controllers
         [HttpPut("{id}")] //UPDATE
         public void Put(int id, [FromBody] Admin Admins)
         {
-
+            
         }
+        
 
         // DELETE: api/Admins/5
         [HttpDelete("{id}")]

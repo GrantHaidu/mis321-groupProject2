@@ -42,10 +42,16 @@ namespace api.Controllers
         }
 
         // PUT: api/Cars/5
-        [HttpPut("{id}")] //UPDATE
-        public void Put(int id, [FromBody] Cars cars)
+        [HttpPut("{CarVIN}")] //UPDATE
+        public void Put(int CarVIN, [FromBody] Cars car)
         {
+            //test
+            System.Console.WriteLine("\nReceived request to update car...");
 
+            UpdateCar updateCarBehavior = new UpdateCar();
+            System.Console.WriteLine("About to update");
+            System.Console.WriteLine(car.ToString());
+            updateCarBehavior.Update(CarVIN, car);
         }
 
         // DELETE: api/Cars/5

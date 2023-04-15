@@ -24,7 +24,7 @@ namespace api.Models
 
         public int seat { get; set; }
 
-        public bool isDeleted { get; set; }
+        public string isDeleted { get; set; }
 
         public string transmission { get; set; }
 

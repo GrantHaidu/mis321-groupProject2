@@ -52,7 +52,7 @@ namespace api.CRUDFunctions
 
                         seat = rdr.GetInt32(10),
 
-                        isDeleted =  rdr.GetBoolean(11)
+                        isDeleted =  rdr.GetString(11)
                     };
 
                     AllCars.Add(car);

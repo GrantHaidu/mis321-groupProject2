@@ -46,7 +46,7 @@ namespace api.Database
 
             con.Open();
 
-            stm = "SELECT VIN, carName, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color,seat, isDeleted FROM cars";
+            stm = "SELECT VIN, carName, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color, seat, isDeleted FROM cars";
 
             using var cmd = new MySqlCommand(stm, con);
 
@@ -62,6 +62,20 @@ namespace api.Database
             con.Open();
 
             stm = "SELECT id, fName, lName, phone, email, expDate FROM customers";
+
+            using var cmd = new MySqlCommand(stm, con);
+
+            using MySqlDataReader rdr = cmd.ExecuteReader();
+
+        }
+          public void TestAdminQuery()
+
+        {
+            using var con = new MySqlConnection(cs);
+
+            con.Open();
+
+            stm = "SELECT adminid,admin_pass  FROM cars";
 
             using var cmd = new MySqlCommand(stm, con);
 

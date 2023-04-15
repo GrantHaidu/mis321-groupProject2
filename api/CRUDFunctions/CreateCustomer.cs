@@ -18,6 +18,7 @@ namespace api.CRUDFunctions
         {
             System.Console.WriteLine("creating Customer ....");
             System.Console.WriteLine(myCustomers.ToString());
+            
             using var con = new MySqlConnection(cs);
             con.Open();
 
