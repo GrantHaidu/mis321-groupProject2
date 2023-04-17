@@ -11,15 +11,28 @@ namespace api.CRUDFunctions
             ConnectionString connectionString = new ConnectionString();
             cs = connectionString.cs;
         }
-        public void CreateOne(Cars myCars)
+        public void CreateOne(int CarVIN, Cars myCars)
         {
             System.Console.WriteLine("creating Car ....");
             System.Console.WriteLine(myCars.ToString());
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"INSERT INTO cars(VIN, carName, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color,seat, isDeleted) VALUES (@VIN, @carName, @Price, @Mpg, @ShortDescrip, @Mile_Range, @horse_power, @drive, @transmission, @color, @seat, @isDeleted)";
+            string stm = @"INSERT INTO cars(VIN, carName, carImage, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color, seat, isDeleted) VALUES (@VIN, @carName, @carImage, @Price, @Mpg, @ShortDescrip, @Mile_Range, @horse_power, @drive, @transmission, @color, @seat, default)";
             using var cmd = new MySqlCommand(stm, con);
+            cmd.Parameters.AddWithValue("@VIN", myCars.CarVIN);
+            cmd.Parameters.AddWithValue("@carName", myCars.carName);
+            cmd.Parameters.AddWithValue("@carImage", myCars.carImage);
+            cmd.Parameters.AddWithValue("@Price", myCars.carPrice);
+            cmd.Parameters.AddWithValue("@Mpg", myCars.mpg);
+            cmd.Parameters.AddWithValue("@ShortDescrip", myCars.shortDescrip);
+            cmd.Parameters.AddWithValue("@Mile_Range", myCars.carRange);
+            cmd.Parameters.AddWithValue("@horse_power", myCars.horsePower);
+            cmd.Parameters.AddWithValue("@drive", myCars.drive);
+            cmd.Parameters.AddWithValue("@transmission", myCars.transmission);
+            cmd.Parameters.AddWithValue("@color", myCars.color);
+            cmd.Parameters.AddWithValue("@seat", myCars.seat);
+            cmd.Parameters.AddWithValue("@isDeleted", myCars.isDeleted);
             cmd.Prepare();
             try
             {

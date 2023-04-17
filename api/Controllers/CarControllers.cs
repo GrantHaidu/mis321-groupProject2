@@ -28,18 +28,20 @@ namespace api.Controllers
         }
 
         // GET: api/Cars/5
-        [HttpGet("{id}", Name = "Cars")]
+        [HttpGet("{CarVIN}", Name = "Cars")]
         public string GetOne(int id)
         {
             return "value";
         }
 
         // POST: api/Cars
-        [HttpPost] //CREATE
-        public void Post([FromBody] Cars cars)
+        [HttpPost("{CarVIN}")] //CREATE
+        public void Post(int CarVIN, [FromBody] Cars car)
         {
-
+            CreateCar newCar = new CreateCar();
+            newCar.CreateOne(CarVIN, car);
         }
+
 
         // PUT: api/Cars/5
         [HttpPut("{CarVIN}")] //UPDATE

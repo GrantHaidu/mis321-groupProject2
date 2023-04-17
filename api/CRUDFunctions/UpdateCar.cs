@@ -29,7 +29,6 @@ namespace api.CRUDFunctions
             cmd.Parameters.AddWithValue("@color", myCars.color);
             cmd.Parameters.AddWithValue("@seat", myCars.seat);
             cmd.Parameters.AddWithValue("@isDeleted", myCars.isDeleted);
-
             cmd.Prepare();
             cmd.ExecuteNonQuery();
         }

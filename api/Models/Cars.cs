@@ -8,6 +8,8 @@ namespace api.Models
 
         public string carName { get; set; }
 
+        public string carImage {get; set;}
+
         public double carPrice { get; set; }
 
         public int mpg { get; set; }
@@ -21,12 +23,11 @@ namespace api.Models
         public string drive { get; set; }
 
         public string color { get; set; }
+        public string transmission { get; set; }
 
         public int seat { get; set; }
 
-        public string isDeleted { get; set; }
-
-        public string transmission { get; set; }
+        public bool isDeleted { get; set; }
 
         static public int count { get; set; }
         // public ISaveSong Save {get; set;} 
@@ -39,7 +40,7 @@ namespace api.Models
         public override string ToString()
 
         {
-            return $"{this.CarVIN}\t{this.carName}\t{this.carPrice}\t{this.mpg}\t{this.shortDescrip}\t{this.carRange}\t{this.horsePower}\t{this.drive}\t{this.color}\t{this.seat}\t{this.transmission}\t{this.isDeleted}";
+            return $"{this.CarVIN}\t{this.carName}\t{this.carImage}\t{this.carPrice}\t{this.mpg}\t{this.shortDescrip}\t{this.carRange}\t{this.horsePower}\t{this.drive}\t{this.color}\t{this.seat}\t{this.transmission}\t{this.isDeleted}";
 
         }
     }
