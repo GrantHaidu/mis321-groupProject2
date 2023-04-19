@@ -6,9 +6,11 @@ namespace api.Models
     {
         public int CarVIN { get; set; }
 
+        public string carType { get; set; }
+
         public string carName { get; set; }
 
-        public string carImage {get; set;}
+        public string? carImage { get; set; }
 
         public double carPrice { get; set; }
 
@@ -27,10 +29,10 @@ namespace api.Models
 
         public int seat { get; set; }
 
-        public bool isDeleted { get; set; }
+        public string isDeleted { get; set; }
 
         static public int count { get; set; }
-        // public ISaveSong Save {get; set;} 
+       
 
         public Cars()
         {
@@ -38,10 +40,9 @@ namespace api.Models
         }
 
         public override string ToString()
-
         {
-            return $"{this.CarVIN}\t{this.carName}\t{this.carImage}\t{this.carPrice}\t{this.mpg}\t{this.shortDescrip}\t{this.carRange}\t{this.horsePower}\t{this.drive}\t{this.color}\t{this.seat}\t{this.transmission}\t{this.isDeleted}";
-
+            return $"CarVIN: {CarVIN}, carType: {carType}, carName: {carName}, carImage: {carImage}, carPrice: {carPrice}, mpg: {mpg}, shortDescrip: {shortDescrip}, carRange: {carRange}, horsePower: {horsePower}, drive: {drive}, color: {color}, transmission: {transmission}, seat: {seat}, isDeleted: {isDeleted}";
         }
+
     }
 }

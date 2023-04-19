@@ -9,7 +9,6 @@ using api.Models;
 using api.CRUDFunctions;
 using api.Database;
 
-
 namespace api.Controllers
 {
     [Route("api/[controller]")]
@@ -29,19 +28,21 @@ namespace api.Controllers
 
         // GET: api/Cars/5
         [HttpGet("{CarVIN}", Name = "Cars")]
-        public string GetOne(int id)
+        public Cars Get(int CarVIN)
         {
-            return "value";
+            //test
+            System.Console.WriteLine("\nReceived request to find car by VIN...");
+            ReadCar getOneCar = new ReadCar();
+            return getOneCar.GetOnebyVIN(CarVIN);
         }
 
         // POST: api/Cars
-        [HttpPost("{CarVIN}")] //CREATE
+        [HttpPost] //CREATE
         public void Post(int CarVIN, [FromBody] Cars car)
         {
             CreateCar newCar = new CreateCar();
             newCar.CreateOne(CarVIN, car);
         }
-
 
         // PUT: api/Cars/5
         [HttpPut("{CarVIN}")] //UPDATE
@@ -57,10 +58,13 @@ namespace api.Controllers
         }
 
         // DELETE: api/Cars/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{CarVIN}")]
+        public void Delete(int CarVIN, Cars myCars)
         {
-            System.Console.WriteLine(id);
+            System.Console.WriteLine("\nReceived request to delete a car...");
+
+            DeleteCar deleteACar = new DeleteCar();
+            deleteACar.DeleteOneByID(CarVIN, myCars);
         }
     }
 }

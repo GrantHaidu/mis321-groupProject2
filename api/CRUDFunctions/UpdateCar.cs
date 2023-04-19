@@ -15,7 +15,7 @@ namespace api.CRUDFunctions
         {
             using var con = new MySqlConnection(cs);
             con.Open();
-            string stm = @"UPDATE cars SET carName = @carName, Price = @Price, Mpg = @Mpg, ShortDescrip = @ShortDescrip, Mile_Range = @Mile_Range, horse_power = @horse_power, drive = @drive, transmission = @transmission,  color  = @color, seat = @seat , isDeleted = @isDeleted  WHERE VIN= @VIN";
+            string stm = @"UPDATE cars SET carName = @carName, Price = @Price, Mpg = @Mpg, ShortDescrip = @ShortDescrip, Mile_Range = @Mile_Range, horse_power = @horse_power, drive = @drive, transmission = @transmission, color  = @color, seat = @seat , isDeleted = @isDeleted  WHERE VIN= @VIN";
             using var cmd = new MySqlCommand(stm, con);
             cmd.Parameters.AddWithValue("@VIN", CarVIN);
             cmd.Parameters.AddWithValue("@carName", myCars.carName);

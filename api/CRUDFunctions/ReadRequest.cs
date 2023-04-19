@@ -4,20 +4,20 @@ using MySql.Data.MySqlClient;
 
 namespace api.CRUDFunctions
 {
-    public class ReadCustomer
+    public class ReadRequest
     {
-        public List<Customers> GetCustomers()
+        public List<Requests> GetRequests()
         {
 
             System.Console.WriteLine("getting customers ....");
-            List<Customers> AllCustomers = new List<Customers>();
+            List<Requests> AllRequests = new List<Requests>();
             ConnectionString myConnection = new ConnectionString();
             string cs = myConnection.cs;
 
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"SELECT id, fName, lName, phone, email, expDate FROM customers ";
+            string stm = @"SELECT cr.car, cr.fName, cr.lName, cr.email, c.carName as interested_in FROM car_request cr JOIN cars c ON (cr.car = c.VIN)";
             using var cmd = new MySqlCommand(stm, con);
             using MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -26,34 +26,33 @@ namespace api.CRUDFunctions
             {
                 while (rdr.Read())
                 {
-                    Customers customer = new Customers()
+                    Requests request = new Requests()
                     {
-                        custID = rdr.GetInt32(0),
+                        car = rdr.GetInt32(0),
 
                         customerFirstName = rdr.GetString(1),
 
                         customerLastName = rdr.GetString(2),
 
-                        customerPhone = rdr.GetString(3),
+                        customerEmail = rdr.GetString(3),
 
-                        customerEmail = rdr.GetString(4),
-
-                        expDate = rdr.GetDateTime(5)
+                        carName = rdr.GetString(4)
                     };
 
-                    AllCustomers.Add(customer);
-                    System.Console.WriteLine(customer.ToString());
+                    AllRequests.Add(request);
+                    System.Console.WriteLine(request.ToString());
 
                 }
                 System.Console.WriteLine("query sucessful");
             }
-            catch
+            catch (System.Exception ex)
             {
+                System.Console.WriteLine(ex);
                 System.Console.WriteLine("query unsuccessful");
             }
 
             con.Dispose();
-            return AllCustomers;
+            return AllRequests;
         }
     }
 }

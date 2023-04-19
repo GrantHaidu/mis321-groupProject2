@@ -69,7 +69,7 @@ void TestDatabase()
 
     catch
     {
-        System.Console.WriteLine("'Car's' table does not exist. Creating table...");
+        System.Console.WriteLine("Car's table does not exist. Creating table...");
     }
 
 }

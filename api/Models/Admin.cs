@@ -14,9 +14,5 @@ namespace api.Models
             
         }
         
-        public override string ToString()
-        {
-            return $"{this.adminID}\t{this.adminPass}";
-        }
      }
  }
