@@ -11,6 +11,7 @@ let gasCar = [
   {
     // SEDAN
     id: 1,
+    img:"https://content.homenetiol.com/2000292/2192701/0x0/stock_images/8/cc_2023HYC02_01_640/cc_2023HYC020029_01_640_S3B.jpg",
     carName: "2023 Hyundai Elantra",
     carPrice: 24400,
     range: 409.2,
@@ -24,6 +25,7 @@ let gasCar = [
   {
     // TRUCK
     id: 2,
+    img:"https://2020pickuptrucks.com/wp-content/uploads/2021/10/2022-Ford-F-150-Diesel.jpeg" ,
     carName: "2022 FORD F-150 XL",
     carPrice: 38998,
     range: 494.0,
@@ -37,6 +39,7 @@ let gasCar = [
   {
     // SUV
     id: 3,
+    img: "https://inv.assets.sincrod.com/GM_VIVP/deg01/2023/1NT26/1NT26__0HD/GLY_060_0HD_0ST_1NF_2NF_2ST_3ST_4HT_4ST_5FC_5ST_6X1_7X1_8X2_9X2_A2X_AAB_ABD_AG2_AKO_AL0_AL9_AR9_ASV_AT8_ATH_AXP_AYG_BTV_C59_CAV_CJ2_CTT_CWA_DCP_DM8_DP6_DRZ_EB1_EF7_ENL_EPM_F_F48_FE2_FHO_FXC_HAX_HS1_IOT_J23_J61_K1O_K4C_KA1_KA6_KI3_KI6_KL9_KRV_KSG_KU9_KW7_LGX_M3V_MAH_MCR_MCZ_N38_N57_NC7_NE1_NE8_NUC_PDF_PDG_PPW_PRF_PZ8_QNU_R7X_R9N_RIA_RSR_RTI_SAL_SLM_SUU_T4L_T7E_T7Z_TC2_TDM_TQ5_TSQ_U05_U2K_U80_UD7_UE1_UE4_UEU_UFG_UG1_UGN_UHS_UHX_UKC_UKJ_UQA_URC_USS_UV2_V08_V33_V64_V8D_V92_VHM_VK3_VRG_VRH_VRK_VRL_VRM_VRN_VRR_VRS_VT7_VTI_VV4_VY7_W2D_WMX_WPP_XL8_YM8_ZCD_ZL8_0HDgmds10.jpg",
     carName: "2023 Chevrolet Blazer",
     carPrice: 36495,
     range: 320,
@@ -50,6 +53,7 @@ let gasCar = [
   {
     // CROSSOVER
     id: 4,
+    img:"https://hips.hearstapps.com/hmg-prod/images/2022-cx-30-2-5-s-carbon-edition-01-1641309026.jpg?crop=0.827xw:0.735xh;0.125xw,0.211xh&resize=1200:*" ,
     carName: "2022 Mazda cx-3",
     carPrice: 21790,
     range: 368.3,
@@ -156,6 +160,9 @@ async function populateTable(selectedOption) {
       img.style.height = "250px";
       imgCell.appendChild(img);
       row.appendChild(imgCell);
+      
+      // const carImage = document.getElementById("img");
+      // carImage.src = img.src;
 
       //NAME ROW
       const nameCell = document.createElement("td");
@@ -213,15 +220,25 @@ async function populateTable(selectedOption) {
 
         //PLACE COMPARE EVENT LISTENER HERE WHEN READY
         const compareButton = document.getElementById("compareButton");
-
-        compareButton.addEventListener("click", () => {
-          const eCar = carsData[i].vinID;
-          // GONNA NEED A VARIABLE FOR TYPE OF CAR TO BE ABLE TO COMPARE TO GAS CAR
+  
+        compareButton.addEventListener("click", function(event) {
+          event.preventDefault()
+          const imgSrc = carsData[i].carImage;
+          const name = carsData[i].carName;
+          const price = carsData[i].carPrice;
+          const mpg = carsData[i].mpg;
+          const range = carsData[i].range;
+          const horsepower = carsData[i].horsePower;
+          const drive = carsData[i].drive;
+          const transmission = carsData[i].transmission;
+          const color = carsData[i].color;
+          const seat = carsData[i].seat;
+          movePage(imgSrc, name, price, mpg, range, horsepower, drive, transmission, color, seat);
           dmodal.style.display = "none";
           dmodal.classList.remove("show");
         });
         const modalID = document.getElementById("detailsModal")
-        closeButton(modalID)
+        closeButton(modalID, "#btn-close");
       });
 
       detailsCell.appendChild(detailsButton);
@@ -234,58 +251,79 @@ async function populateTable(selectedOption) {
       availabilityButton.innerText = "Check Availability";
 
       availabilityButton.addEventListener("click", () => {
-       
         const amodal = document.getElementById("availModal");
         amodal.classList.add("show");
         amodal.style.display = "block";
-        
 
         const submitRequest = document.getElementById("availSubmit");
-        submitRequest.addEventListener("submit", async function(e) {
-          e.preventDefault();
-          const carId = await getCarById(vinID)
-          const request = {
-            car: carId,
-            fNameInput: document.getElementById("firstName").value,
-            lNameInput: document.getElementById("lastName").value,
-            emailInput: document.getElementById("email").value
-          }
 
-          //CUSTOMER PUT FOR CAR REQUEST HERE
-          fetch(`${requestUrl}/${request.car}`, {
+        submitRequest.addEventListener("click", async function(e) {
+          e.preventDefault();
+          const fNameInput = document.getElementById("firstName");
+          const lNameInput = document.getElementById("lastName");
+          const emailInput = document.getElementById("email");
+
+          const id = carsData[i].vinID;
+
+          const availBody = {
+            vinId: id,
+            firstName: fNameInput,
+            lastName: lNameInput,
+            email: emailInput,
+          };
+
+          fetch(requestUrl, {
             method: "POST",
             headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-            body: JSON.stringify(request),
-          }).catch((error) => {
-            debugger;
-            console.log(error);
-          });
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(availBody),
+          })
+            .then((response) => {
+              console.log(response);
+              return response;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+            
+            fNameInput.value = " ";
+            lNameInput.value = " ";
+            emailInput.value = " ";
 
           amodal.style.display = "none";
           amodal.classList.remove("show");
-
         });
-      const modalID = document.getElementById("availModal")
-      closeButton(modalID)
+        const modalID = document.getElementById("availModal");
+        console.log(modalID);
+        closeButton(modalID, "#btn-clos");
       });
       availabilityCell.appendChild(availabilityButton);
       row.appendChild(availabilityCell);
-
       tableBody.appendChild(row);
     }
   }
 }
-function closeButton(modalID) {
-  const closeButton = modalID.querySelector("#btn-close");
-  closeButton.addEventListener("click", () => {
+
+function closeButton(modalID, bID) {
+  const closeButton = modalID.querySelector(bID);
+  console.log(bID);
+
+  // Remove any existing event listeners
+  closeButton.removeEventListener("click", closeModal);
+
+  // Add a new event listener to close the modal
+  closeButton.addEventListener("click", closeModal);
+
+  function closeModal() {
     modalID.classList.remove("show");
     modalID.style.display = "none";
-  });
+  }
 }
-
+// function movePage(){
+//   window.location.href = "calculator.html";
+// }
 
 //ADD CAR IN ADMIN
 async function addNewCar(event) {
@@ -348,25 +386,32 @@ async function addCar(newCar) {
     debugger;
     console.log(error);
   });
-
-  // fetch(url, {
-  //   method: "POST",
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(newCar),
-  // })
-  //   .then((response) => {
-  //     console.log(response);
-  //     return response;
-  //   })
-  //   .then()
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
 }
 
+function movePage(imgSrc, name, price, mpg, range, horsepower, drive, transmission, color, seat) {
+  
+  const calcImg = document.getElementById("calcImg");
+  calcImg.src = imgSrc; 
+  const calcName = document.getElementById("calcName")
+  calcName.textContent = name;
+  const calcPrice = document.getElementById("calcPrice")
+  calcPrice.textContent = price
+  const calcPower = document.getElementById("calcPower")
+  calcPower.textContent = horsepower
+  const calcDrive = document.getElementById("calcDrive")
+  calcDrive.textContent = drive
+  const calcTrans = document.getElementById("calcTrans")
+  calcTrans.textContent = transmission
+  const calcMpg = document.getElementById("calcMpg")
+  calcMpg.textContent = mpg
+  const calcSeat = document.getElementById("calcSeat")
+  calcSeat.textContent = seat
+  const calcColor = document.getElementById("calcColor")
+  calcColor.textContent = color
+  const calcRange = document.getElementById("calcRange")
+  calcRange.textContent = range
+  window.location.href = "calculator.html";
+}
 //POPULATES THE ADMIN TABLE
 async function populateAdmin() {
   let sortOption = "low";
@@ -379,6 +424,7 @@ async function populateAdmin() {
   for (let i = 0; i < carsData.length; i++) {
     if (!carsData[i].isDeleted) {
       const row = document.createElement("tr");
+      row.style.width = "95%";
 
       const name = document.createElement("input");
       name.value = carsData[i].carName;
@@ -404,6 +450,8 @@ async function populateAdmin() {
       const imgCell = document.createElement("td");
       const img = document.createElement("img");
       img.src = carsData[i].carImage;
+      img.style.width = "200px";
+      img.style.height = "150px";
       imgCell.appendChild(img);
       row.appendChild(imgCell);
 
@@ -465,6 +513,7 @@ async function populateAdmin() {
       const saveCell = document.createElement("td");
       const saveButton = document.createElement("button");
       saveButton.classList.add("btn-outline-primary");
+      saveButton.style.marginRight = "12px";
       saveButton.innerText = "Save";
       saveButton.addEventListener("click", () => {
         const updatedCar = {
@@ -492,21 +541,22 @@ async function populateAdmin() {
 
       const deleteButton = document.createElement("button");
       deleteButton.classList.add("btn-outline-danger");
+      deleteButton.style.marginRight = "5px";
       deleteButton.innerText = "Delete";
       deleteButton.addEventListener("click", () => {
-        deleteCar(carsData[i].vinID).then(
+        deleteCar(carsData[i].carVIN).then(() => {
           setTimeout(() => {
             location.reload();
-          }, 3000)
-        );
+          }, 3000);
+        });
       });
       saveCell.appendChild(deleteButton);
       row.appendChild(saveCell);
-
+      
       adminTableBody.appendChild(row);
+      
     }
   }
-
   form.addEventListener("submit", addNewCar);
 }
 
@@ -572,7 +622,8 @@ async function updateCar(id, car, type) {
   } else if (type === "delete") {
     updateObj = { ...car, isDeleted: true };
   }
-
+  console.log(updateObj)
+  console.log("here 1")
   fetch(`${url}/${id}`, {
     method: "PUT",
     headers: {
@@ -587,26 +638,102 @@ async function updateCar(id, car, type) {
     .catch((error) => {
       console.log(error);
     });
+  
 }
 
-//DELETE A CAR
+
+// async function deleteCar(id) {
+//   const car = await getCarById(id);
+//   const type = "delete";
+
+//   if (!car) {
+//     console.error(`Car with VIN ${id} not found`);
+//     return;
+//   }
+
+//   // const index = cars.findIndex((car) => car.carVIN === carVIN);
+//   // if (index >= 0) {
+//   //   car[index].isDeleted = true;
+//   // }
+  
+//   const updatedCar= {
+//     ...car,
+//     isDeleted: true,
+//   };
+
+//   await updateCar(id, updatedCar, type);
+  
+// }
 async function deleteCar(id) {
-  const car = await getCarById(id);
-  const type = "delete";
-
-  if (!car) {
-    console.error(`Car with ID ${id} not found`);
-    return;
+  let car = 0;
+  for (var i = 0; i < cars.length; i++) {
+    if (cars[i].carVIN == id) {
+      
+      car = {
+        ...cars[i],
+        deleted : !cars[i].isDeleted
+        
+      };
+      console.log(car)
+    }
   }
-
-  const index = cars.findIndex((car) => car.vinID === id);
-  if (index >= 0) {
-    cars[index].isDeleted = true;
-  }
-  const updatedCar = {
-    ...car,
-    isDeleted: true,
-  };
-
-  await updateCar(id, updatedCar, type);
+  await fetch(`${url}/${id}`, {
+    method: "PUT",
+    headers: {
+      accept: "*/*",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(car),
+  });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // await fetch(`${url}/${vinID}`, {
+  //   method: "PUT",
+  //   headers: {
+  //     accept: "*/*",
+  //     "content-type": "application/json",
+  //   },
+  //   body: JSON.stringify(car),
+  // });
+
+// async function deleteCar(carVIN) {
+//   let car = await getCarById(carVIN);
+
+//   for (let i = 0; i < cars.length; i++) {
+//     if (cars[i].carVIN == carVIN) {
+//       car = {
+//         ...cars[i],
+//         isDeleted: !cars[i].isDeleted,
+//       };
+//       break; // Stop the loop when the car is found
+//     }
+//   }
+
+//   if (!car) {
+//     console.error(`Car with VIN ${carVIN} not found`);
+//     return;
+//   }
+
+//   await fetch(`${url}/${carVIN}`, {
+//     method: "PUT",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(car),
+//   });
+// }
