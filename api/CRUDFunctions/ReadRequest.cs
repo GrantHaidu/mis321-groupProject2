@@ -30,13 +30,13 @@ namespace api.CRUDFunctions
                     {
                         car = rdr.GetInt32(0),
 
-                        customerFirstName = rdr.GetString(1),
+                        fNameInput = rdr.GetString(1),
 
-                        customerLastName = rdr.GetString(2),
+                        lNameInput = rdr.GetString(2),
 
-                        customerEmail = rdr.GetString(3),
+                        email= rdr.GetString(3),
 
-                        carName = rdr.GetString(4)
+                        // carName = rdr.GetString(4)
                     };
 
                     AllRequests.Add(request);

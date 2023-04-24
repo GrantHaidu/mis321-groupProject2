@@ -25,9 +25,9 @@ namespace api.CRUDFunctions
             string stm = @"INSERT INTO car_request(car,fName,lName,email,expDate) VALUES (@car, @fName, @lName, @email, @expDate)";
             using var cmd = new MySqlCommand(stm, con);
             cmd.Parameters.AddWithValue("@car", myRequests.car);
-            cmd.Parameters.AddWithValue("@fName", myRequests.customerFirstName);
-            cmd.Parameters.AddWithValue("@lName", myRequests.customerLastName);
-            cmd.Parameters.AddWithValue("@email", myRequests.customerEmail);
+            cmd.Parameters.AddWithValue("@fName", myRequests.fNameInput);
+            cmd.Parameters.AddWithValue("@lName", myRequests.lNameInput);
+            cmd.Parameters.AddWithValue("@email", myRequests.email);
             cmd.Parameters.AddWithValue("@expDate", myRequests.expDate);
             cmd.Prepare();
             try

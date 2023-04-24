@@ -123,6 +123,7 @@ h1.inventory{
   display: none;
 }
 
+
 .modal.show + .modal-backdrop {
   display: block;
 }
@@ -179,23 +180,7 @@ align-content: right;
 border: none;
 }
 
-.Aimg {
-  width: 200px;
-  height: 200px;
-  margin-right: 2px;
-}
+.btn-outline-danger {
+  background-color: #dc3545 !important;
 
-.Adescription {
-  width: 50%;
-  margin-left: 2px;
-}
-
-.Aname {
-  margin: 0;
-}
-
-.Aprice {
-  padding-top: 50px;
-  font-size: xx-large;
-  text-align: center;
 }

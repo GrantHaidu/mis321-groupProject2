@@ -30,7 +30,7 @@ namespace api.CRUDFunctions
                     Cars car = new Cars()
                     {
 
-                        CarVIN = rdr.GetInt32(0),
+                        carVIN = rdr.GetInt32(0),
 
                         carType = rdr.GetString(1),
 
@@ -38,7 +38,7 @@ namespace api.CRUDFunctions
 
                         carImage = rdr.GetString(3),
 
-                        carPrice = rdr.GetString(4),
+                        carPrice = rdr.GetDouble(4),
 
                         mpg = rdr.GetInt32(5),
 
@@ -56,7 +56,7 @@ namespace api.CRUDFunctions
 
                         seat = rdr.GetInt32(12),
 
-                        isDeleted = rdr.GetString(13)
+                        isDeleted = rdr.GetBoolean(13)
                     };
 
                     AllCars.Add(car);
@@ -86,7 +86,7 @@ namespace api.CRUDFunctions
 
             string stm = @"SELECT VIN, carType, carName, carImage, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color,seat, isDeleted FROM cars;";
             using var cmd = new MySqlCommand(stm, con);
-            cmd.Parameters.AddWithValue("@VIN", myCar.CarVIN);
+            cmd.Parameters.AddWithValue("@VIN", myCar.carVIN);
             cmd.Prepare();
             try
             {
@@ -94,7 +94,7 @@ namespace api.CRUDFunctions
 
                 while (rdr.Read())
                 {
-                        myCar.CarVIN = rdr.GetInt32(0);
+                        myCar.carVIN = rdr.GetInt32(0);
 
                         myCar.carType = rdr.GetString(1);
 
@@ -102,7 +102,7 @@ namespace api.CRUDFunctions
 
                         myCar.carImage = rdr.GetString(3);
 
-                        myCar.carPrice = rdr.GetString(4);
+                        myCar.carPrice = rdr.GetDouble(4);
 
                         myCar.mpg = rdr.GetInt32(5);
 
@@ -120,7 +120,7 @@ namespace api.CRUDFunctions
 
                         myCar.seat = rdr.GetInt32(12);
 
-                        myCar.isDeleted = rdr.GetString(13);
+                        myCar.isDeleted = rdr.GetBoolean(13);
                 }
 
                     System.Console.WriteLine("The result of the search was: ");

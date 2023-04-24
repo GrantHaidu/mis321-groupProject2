@@ -1,9 +1,11 @@
 let url = "https://localhost:7012/api/Car"; //fill this link with ours
+let requestUrl = "https://localhost:7012/api/carRequest";
 const sortSelect = document.getElementById("sortSelect");
 const form = document.getElementById("new-car");
 const tableBody = document.getElementById("carTableBody");
 const adminTableBody = document.getElementById("AdminTableBody");
 let cars = [];
+let requests = [];
 // let sortOption = "high";
 let gasCar = [
   {
@@ -92,7 +94,7 @@ async function getCars(selectedOption) {
       carObj = {
         carType: car.carType,
         carImage: car.carImage,
-        CarVIN: car.carVIN,
+        carVIN: car.carVIN,
         carName: car.carName,
         carPrice: car.carPrice,
         shortDescrip: car.shortDescrip,
@@ -121,7 +123,7 @@ async function getCarById(vinID) {
   return {
     carType: carData.carType,
     carImg: carData.carImage,
-    vinID: carData.CarVIN,
+    vinID: carData.carVIN,
     carName: carData.carName,
     carPrice: carData.carPrice,
     shortDesc: carData.shortDescrip,
@@ -144,7 +146,7 @@ async function populateTable(selectedOption) {
   console.log(carsData);
 
   for (let i = 0; i < carsData.length; i++) {
-    if (carsData[i].isDeleted) {
+    if (!carsData[i].isDeleted) {
       //IMG ROW
       const row = document.createElement("tr");
       const imgCell = document.createElement("td");
@@ -218,6 +220,8 @@ async function populateTable(selectedOption) {
           dmodal.style.display = "none";
           dmodal.classList.remove("show");
         });
+        const modalID = document.getElementById("detailsModal")
+        closeButton(modalID)
       });
 
       detailsCell.appendChild(detailsButton);
@@ -230,24 +234,42 @@ async function populateTable(selectedOption) {
       availabilityButton.innerText = "Check Availability";
 
       availabilityButton.addEventListener("click", () => {
+       
         const amodal = document.getElementById("availModal");
         amodal.classList.add("show");
         amodal.style.display = "block";
+        
 
         const submitRequest = document.getElementById("availSubmit");
-        submitRequest.addEventListener("click", async (event) => {
-          const fNameInput = document.getElementById("firstName");
-          const lNameInput = document.getElementById("lastName");
-          const emailInput = document.getElementById("email");
+        submitRequest.addEventListener("submit", async function(e) {
+          e.preventDefault();
+          const carId = await getCarById(vinID)
+          const request = {
+            car: carId,
+            fNameInput: document.getElementById("firstName").value,
+            lNameInput: document.getElementById("lastName").value,
+            emailInput: document.getElementById("email").value
+          }
 
-          const id = carsData[i].vinID;
+          //CUSTOMER PUT FOR CAR REQUEST HERE
+          fetch(`${requestUrl}/${request.car}`, {
+            method: "POST",
+            headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+            body: JSON.stringify(request),
+          }).catch((error) => {
+            debugger;
+            console.log(error);
+          });
 
           amodal.style.display = "none";
           amodal.classList.remove("show");
-          //CUSTOMER PUT FOR CAR REQUEST HERE
-        });
 
-        // Add close event listener to availability modal
+        });
+      const modalID = document.getElementById("availModal")
+      closeButton(modalID)
       });
       availabilityCell.appendChild(availabilityButton);
       row.appendChild(availabilityCell);
@@ -256,34 +278,65 @@ async function populateTable(selectedOption) {
     }
   }
 }
+function closeButton(modalID) {
+  const closeButton = modalID.querySelector("#btn-close");
+  closeButton.addEventListener("click", () => {
+    modalID.classList.remove("show");
+    modalID.style.display = "none";
+  });
+}
+
 
 //ADD CAR IN ADMIN
 async function addNewCar(event) {
   // form.addEventListener("submit", async function (e) {
-    event.preventDefault();
+  event.preventDefault();
+  let fourWDRadio = document.getElementById("drive");
+  let drive = "2wd";
+  if (fourWDRadio.checked) {
+    drive = "4wd";
+  } else {
+    drive = "2wd";
+  }
+  let autotransmission = document.getElementById("transmission");
+  let transmission = "manual";
+  if (autotransmission.checked) {
+    transmission = "automatic";
+  } else {
+    transmission = "manual";
+  }
 
-    const newCar = {
-      carImage: document.getElementById("car-img").value,
-      carType: document.getElementById("car-type").value, //ADD A DROP DOWN SELECTION TO THE CAR FORM TO CHOOSE BETWEEN THE 4 TYPES
-      carName: document.getElementById("car-name").value,
-      shortDescrip: document.getElementById("short-desc").value,
-      carPrice: document.getElementById("car-price").value,
-      range: document.getElementById("travel-range").value,
-      horsePower: document.getElementById("horse-power").value,
-      drive: document.getElementById("drive").value,
-      transmission: document.getElementById("transmission").value,
-      mpg: document.getElementById("mpg").value,
-      color: document.getElementById("car-color").value,
-      seat: document.getElementById("car-seat").value,
-    };
+  const newCar = {
+    carVIN: 1,
+    carImage: document.getElementById("car-img").value,
+    carType: document.getElementById("car-type").value, //ADD A DROP DOWN SELECTION TO THE CAR FORM TO CHOOSE BETWEEN THE 4 TYPES
+    carName: document.getElementById("car-name").value,
+    shortDescrip: document.getElementById("short-desc").value,
+    carPrice: parseInt(document.getElementById("car-price").value),
+    carRange: parseInt(document.getElementById("travel-range").value),
+    horsePower: parseInt(document.getElementById("horse-power").value),
+    drive: drive,
+    transmission: transmission,
+    mpg: parseInt(document.getElementById("mpg").value),
+    color: document.getElementById("car-color").value,
+    seat: parseInt(document.getElementById("car-seat").value),
+    isDeleted: false,
+  };
   cars.unshift(newCar);
-  console.log(newCar);
-  addCar(newCar);
+  // console.log(newCar);
+  await addCar(newCar).then(
+    setTimeout(() => {
+      location.reload();
+    }, 5000)
+  );
+  // addCar(newCar);
   // blankFields();
 }
 
 //ADD CAR TO DATABASE
 async function addCar(newCar) {
+  newCar.carVIN = -1;
+  debugger;
   fetch(url, {
     method: "POST",
     headers: {
@@ -291,14 +344,27 @@ async function addCar(newCar) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(newCar),
-  })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  }).catch((error) => {
+    debugger;
+    console.log(error);
+  });
+
+  // fetch(url, {
+  //   method: "POST",
+  //   headers: {
+  //     Accept: "application/json",
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(newCar),
+  // })
+  //   .then((response) => {
+  //     console.log(response);
+  //     return response;
+  //   })
+  //   .then()
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 }
 
 //POPULATES THE ADMIN TABLE
@@ -311,7 +377,7 @@ async function populateAdmin() {
   console.log(carsData);
 
   for (let i = 0; i < carsData.length; i++) {
-    if (carsData[i].isDeleted) {
+    if (!carsData[i].isDeleted) {
       const row = document.createElement("tr");
 
       const name = document.createElement("input");
@@ -413,7 +479,7 @@ async function populateAdmin() {
           seat: seat.innerText,
           carPrice: price.innerText,
           carImage: img.src,
-          CarVIN: carsData[i].vinID,
+          carVIN: carsData[i].vinID,
           isDeleted: false,
         };
         editCar(updatedCar.vinID).then(
@@ -455,16 +521,17 @@ async function editCar(id) {
   }
   const index = cars.findIndex((car) => car.vinID === id);
   if (index >= 0) {
-    cars[index].carImg;
+    cars[index].carType
+    cars[index].carImage;
     cars[index].carName;
     cars[index].carPrice;
-    cars[index].shortDesc;
-    cars[index].range;
+    cars[index].shortDescrip;
+    cars[index].carRange;
     cars[index].horsePower;
     cars[index].drive;
     cars[index].transmission;
     cars[index].color;
-    cars[index].Mpg;
+    cars[index].mpg;
     cars[index].seat;
   }
 
@@ -482,16 +549,16 @@ async function editCar(id) {
 
   const updatedCar = {
     ...car,
-    carImg: updateImg.value,
+    carImage: updateImg.value,
     carName: updateName.value,
     carPrice: updatePrice.value,
-    shortDesc: updateShortDesc.value,
-    range: updateRange.value,
+    shortDescrip: updateShortDesc.value,
+    carRange: updateRange.value,
     horsePower: updateHorsepower.value,
     drive: updateDrive.value,
     transmission: updateTrans.value,
     color: updateColor.value,
-    Mpg: updateMpg.value,
+    mpg: updateMpg.value,
     seat: updateSeat.value,
   };
   await updateCar(id, updatedCar, type);

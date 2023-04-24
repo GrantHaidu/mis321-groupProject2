@@ -38,10 +38,10 @@ namespace api.Controllers
 
         // POST: api/Cars
         [HttpPost] //CREATE
-        public void Post(int CarVIN, [FromBody] Cars car)
+        public void Post([FromBody] Cars car)
         {
             CreateCar newCar = new CreateCar();
-            newCar.CreateOne(CarVIN, car);
+            newCar.CreateOne(car);
         }
 
         // PUT: api/Cars/5
