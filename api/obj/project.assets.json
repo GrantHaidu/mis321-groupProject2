@@ -1723,19 +1723,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/peytonkauffman/.nuget/packages/": {}
+    "/Users/granthaidu/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/api.csproj",
+      "projectUniqueName": "/Users/granthaidu/Desktop/mis321-groupProject2/api/api.csproj",
       "projectName": "api",
-      "projectPath": "/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/api.csproj",
-      "packagesPath": "/Users/peytonkauffman/.nuget/packages/",
-      "outputPath": "/Users/peytonkauffman/Documents/repos/mis321-groupProject2/api/obj/",
+      "projectPath": "/Users/granthaidu/Desktop/mis321-groupProject2/api/api.csproj",
+      "packagesPath": "/Users/granthaidu/.nuget/packages/",
+      "outputPath": "/Users/granthaidu/Desktop/mis321-groupProject2/api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/peytonkauffman/.nuget/NuGet/NuGet.Config"
+        "/Users/granthaidu/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"

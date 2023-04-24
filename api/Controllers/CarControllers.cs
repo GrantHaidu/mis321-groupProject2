@@ -27,13 +27,13 @@ namespace api.Controllers
         }
 
         // GET: api/Cars/5
-        [HttpGet("{CarVIN}", Name = "Cars")]
-        public Cars Get(int CarVIN)
+        [HttpGet("{carVIN}", Name = "Cars")]
+        public Cars Get(int carVIN)
         {
             //test
             System.Console.WriteLine("\nReceived request to find car by VIN...");
             ReadCar getOneCar = new ReadCar();
-            return getOneCar.GetOnebyVIN(CarVIN);
+            return getOneCar.GetOnebyVIN(carVIN);
         }
 
         // POST: api/Cars
@@ -45,8 +45,8 @@ namespace api.Controllers
         }
 
         // PUT: api/Cars/5
-        [HttpPut("{CarVIN}")] //UPDATE
-        public void Put(int CarVIN, [FromBody] Cars car)
+        [HttpPut("{carVIN}")] //UPDATE
+        public void Put(int carVIN, [FromBody] Cars car)
         {
             //test
             System.Console.WriteLine("\nReceived request to update car...");
@@ -54,11 +54,11 @@ namespace api.Controllers
             UpdateCar updateCarBehavior = new UpdateCar();
             System.Console.WriteLine("About to update");
             System.Console.WriteLine(car.ToString());
-            updateCarBehavior.Update(CarVIN, car);
+            updateCarBehavior.Update(carVIN, car);
         }
 
         // DELETE: api/Cars/5
-        [HttpDelete("{CarVIN}")]
+        [HttpDelete("{carVIN}")]
         public void Delete(int CarVIN, Cars myCars)
         {
             System.Console.WriteLine("\nReceived request to delete a car...");

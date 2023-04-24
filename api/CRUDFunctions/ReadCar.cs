@@ -74,7 +74,7 @@ namespace api.CRUDFunctions
             con.Dispose();
             return AllCars;
         }
-        public Cars GetOnebyVIN(int CarVIN)
+        public Cars GetOnebyVIN(int carVIN)
         {
             System.Console.WriteLine("looking for the car ....");
             Cars myCar = new Cars();
@@ -84,9 +84,9 @@ namespace api.CRUDFunctions
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"SELECT VIN, carType, carName, carImage, Price, Mpg, ShortDescrip, Mile_Range, horse_power, drive, transmission, color,seat, isDeleted FROM cars;";
+            string stm = @"SELECT * FROM cars WHERE VIN=@VIN";
             using var cmd = new MySqlCommand(stm, con);
-            cmd.Parameters.AddWithValue("@VIN", myCar.carVIN);
+            cmd.Parameters.AddWithValue("@VIN", carVIN);
             cmd.Prepare();
             try
             {
