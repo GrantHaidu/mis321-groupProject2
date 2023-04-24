@@ -38,7 +38,7 @@ namespace api.CRUDFunctions
 
                         carImage = rdr.GetString(3),
 
-                        carPrice = rdr.GetDouble(4),
+                        carPrice = rdr.GetString(4),
 
                         mpg = rdr.GetInt32(5),
 
@@ -102,7 +102,7 @@ namespace api.CRUDFunctions
 
                         myCar.carImage = rdr.GetString(3);
 
-                        myCar.carPrice = rdr.GetDouble(4);
+                        myCar.carPrice = rdr.GetString(4);
 
                         myCar.mpg = rdr.GetInt32(5);
 

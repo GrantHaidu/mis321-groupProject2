@@ -1,449 +1,545 @@
-let cars =[
-    {
-    carImg : "./resources/img/tesla.png",
-    vinID : 1,
-    carName : "2022 Tesla Model S", 
-    carPrice : "89,990", 
-    shortDesc: "The Tesla Model S is an electric luxury sedan with impressive performance, advanced technology, and a sleek design.",
-    range: "405 Miles",
-    horsePower: 400,
+let url = "https://localhost:7012/api/Car"; //fill this link with ours
+const sortSelect = document.getElementById("sortSelect");
+const form = document.getElementById("new-car");
+const tableBody = document.getElementById("carTableBody");
+const adminTableBody = document.getElementById("AdminTableBody");
+let cars = [];
+// let sortOption = "high";
+let gasCar = [
+  {
+    // SEDAN
+    id: 1,
+    carName: "2023 Hyundai Elantra",
+    carPrice: 24400,
+    range: 409.2,
+    horsePower: 147,
+    drive: "2wd",
+    transmission: "automatic",
+    color: "black",
+    Mpg: 33,
+    seat: 5,
+  },
+  {
+    // TRUCK
+    id: 2,
+    carName: "2022 FORD F-150 XL",
+    carPrice: 38998,
+    range: 494.0,
+    horsePower: 325,
     drive: "4wd",
-    transmission: "Automatic",
-    color: "Pearl White Multi-Coat",
-    Mpg: 30,
-    seat: "5",
-    isDeleted: false
-    },
-    {
-      carImg : "./resources/img/R1T.png",
-      vinID : 2,
-      carName : "2022 Rivian R1T", 
-      carPrice : "74,075", 
-      shortDesc: "The R1T is an electric pickup truck produced by Rivian Automotive, featuring all-wheel drive, up to 400+ miles of range, and various advanced technologies and off-road capabilities.",
-      range: "400 Miles",
-      horsePower: 600,
-      drive: "4wd",
-      transmission: "Automatic",
-      color: "LA Silver",
-      Mpg: 30,
-      seat: "5",
-      isDeleted: false
-    },
-  
-]
+    transmission: "automatic",
+    color: "Green",
+    Mpg: 20,
+    seat: 5,
+  },
+  {
+    // SUV
+    id: 3,
+    carName: "2023 Chevrolet Blazer",
+    carPrice: 36495,
+    range: 320,
+    horsePower: 308,
+    drive: "4wd",
+    transmission: "automatic",
+    color: "Brown",
+    Mpg: 20,
+    seat: 5,
+  },
+  {
+    // CROSSOVER
+    id: 4,
+    carName: "2022 Mazda cx-3",
+    carPrice: 21790,
+    range: 368.3,
+    horsePower: 148,
+    drive: "2wd",
+    transmission: "automatic",
+    color: "Grey",
+    Mpg: 29,
+    seat: 5,
+  },
+];
 
+//LISTENS FOR A CHANGE ON THE SORT
 
+if (sortSelect) {
+  sortSelect.addEventListener("change", () => {
+    const selectedOption = sortSelect.value;
+    populateTable(selectedOption);
+  });
+}
 
-//THIS READS IN LOCAL STORAGE
-function readInFile(){
-    if(JSON.parse(localStorage.getItem('AllMyCars')) != null){
-        try{
-            songs = JSON.parse(localStorage.getItem('AllMyCars'))
-        }catch{
-    
-        } 
+function handleOnLoad() {
+  const selectedOption = sortSelect.value;
+  populateTable(selectedOption);
+}
+
+//GETS CARS FROM DATABASE
+async function getCars(selectedOption) {
+  try {
+    cars = [];
+    const response = await fetch(url);
+    const data = await response.json();
+
+    // Sort the cars based on the selected option
+    if (selectedOption === "high") {
+      data.sort((a, b) => b.carPrice - a.carPrice);
+    } else if (selectedOption === "low") {
+      data.sort((a, b) => a.carPrice - b.carPrice);
     }
+
+    data.forEach((car) => {
+      carObj = {
+        carType: car.carType,
+        carImage: car.carImage,
+        CarVIN: car.carVIN,
+        carName: car.carName,
+        carPrice: car.carPrice,
+        shortDescrip: car.shortDescrip,
+        range: car.carRange,
+        horsePower: car.horsePower,
+        drive: car.drive,
+        transmission: car.transmission,
+        color: car.color,
+        mpg: car.mpg,
+        seat: car.seat,
+        isDeleted: car.isDeleted,
+      };
+      cars.push(carObj);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
+  return cars;
 }
 
-function submitAvailForm(id){
-  console.log("form submitted");
-  let name = document.getElementById(`floatingName-${id}`).value;
-  let email = document.getElementById(`floatingEmail-${id}`).value;
-
-  console.log(name);
-  console.log(email);
-
-  // post the info to api
-
-  document.getElementById(`floatingName-${id}`).value = "";
-  document.getElementById(`floatingEmail-${id}`).value = "";
+//GETS SPECIFIC CAR FOR EDIT/DELETE
+async function getCarById(vinID) {
+  const response = await fetch(`${url}/${vinID}`);
+  const carData = await response.json();
+  return {
+    carType: carData.carType,
+    carImg: carData.carImage,
+    vinID: carData.CarVIN,
+    carName: carData.carName,
+    carPrice: carData.carPrice,
+    shortDesc: carData.shortDescrip,
+    range: carData.carRange,
+    horsePower: carData.horsePower,
+    drive: carData.drive,
+    transmission: carData.transmission,
+    color: carData.color,
+    Mpg: carData.mpg,
+    seat: carData.seat,
+    isDeleted: carData.isDeleted,
+  };
 }
 
-async function editCar(vinID) {
+//POPULATE HOME PAGE
+async function populateTable(selectedOption) {
+  tableBody.innerHTML = " ";
 
-  
+  const carsData = await getCars(selectedOption);
+  console.log(carsData);
+
+  for (let i = 0; i < carsData.length; i++) {
+    if (carsData[i].isDeleted) {
+      //IMG ROW
+      const row = document.createElement("tr");
+      const imgCell = document.createElement("td");
+      const img = document.createElement("img");
+      img.src = carsData[i].carImage;
+      img.style.width = "420px";
+      img.style.height = "250px";
+      imgCell.appendChild(img);
+      row.appendChild(imgCell);
+
+      //NAME ROW
+      const nameCell = document.createElement("td");
+      const name = document.createElement("h1");
+      name.textContent = carsData[i].carName;
+      name.style.fontWeight = "bold";
+      nameCell.appendChild(name);
+      row.appendChild(nameCell);
+
+      //DESCRIPTION ROW
+      const descCell = document.createElement("td");
+      const desc = document.createElement("p");
+      desc.textContent = carsData[i].shortDescrip;
+      descCell.appendChild(desc);
+      row.appendChild(descCell);
+
+      //PRICE
+      const priceCell = document.createElement("td");
+      const price = document.createElement("h2");
+      price.textContent = "$" + carsData[i].carPrice;
+      price.style.fontWeight = "bold";
+      price.style.textAlign = "center";
+      priceCell.appendChild(price);
+      row.appendChild(priceCell);
+
+      //DETAILS MODAL
+      const detailsCell = document.createElement("td");
+      const detailsButton = document.createElement("button");
+      detailsButton.classList.add("btn-outline-primary");
+      detailsButton.innerText = "View Details";
+      detailsButton.addEventListener("click", () => {
+        const dmodal = document.getElementById("detailsModal");
+
+        const nameVal = document.getElementById("carName");
+        nameVal.textContent = carsData[i].carName;
+        const priceVal = document.getElementById("carPrice");
+        priceVal.textContent = carsData[i].carPrice;
+        const mpgVal = document.getElementById("Mpg");
+        mpgVal.textContent = carsData[i].mpg;
+        const rangeVal = document.getElementById("range");
+        rangeVal.textContent = carsData[i].range;
+        const horsePowerVal = document.getElementById("horsePower");
+        horsePowerVal.textContent = carsData[i].horsePower;
+        const driveVal = document.getElementById("drive");
+        driveVal.textContent = carsData[i].drive;
+        const transmissionVal = document.getElementById("transmission");
+        transmissionVal.textContent = carsData[i].transmission;
+        const colorVal = document.getElementById("color");
+        colorVal.textContent = carsData[i].color;
+        const seatVal = document.getElementById("seat");
+        seatVal.textContent = carsData[i].seat;
+
+        dmodal.classList.add("show");
+        dmodal.style.display = "block";
+
+        //PLACE COMPARE EVENT LISTENER HERE WHEN READY
+        const compareButton = document.getElementById("compareButton");
+
+        compareButton.addEventListener("click", () => {
+          const eCar = carsData[i].vinID;
+          // GONNA NEED A VARIABLE FOR TYPE OF CAR TO BE ABLE TO COMPARE TO GAS CAR
+          dmodal.style.display = "none";
+          dmodal.classList.remove("show");
+        });
+      });
+
+      detailsCell.appendChild(detailsButton);
+      row.appendChild(detailsCell);
+
+      //AVAILABILITY MODAL
+      const availabilityCell = document.createElement("td");
+      const availabilityButton = document.createElement("button");
+      availabilityButton.classList.add("btn-outline-primary");
+      availabilityButton.innerText = "Check Availability";
+
+      availabilityButton.addEventListener("click", () => {
+        const amodal = document.getElementById("availModal");
+        amodal.classList.add("show");
+        amodal.style.display = "block";
+
+        const submitRequest = document.getElementById("availSubmit");
+        submitRequest.addEventListener("click", async (event) => {
+          const fNameInput = document.getElementById("firstName");
+          const lNameInput = document.getElementById("lastName");
+          const emailInput = document.getElementById("email");
+
+          const id = carsData[i].vinID;
+
+          amodal.style.display = "none";
+          amodal.classList.remove("show");
+          //CUSTOMER PUT FOR CAR REQUEST HERE
+        });
+
+        // Add close event listener to availability modal
+      });
+      availabilityCell.appendChild(availabilityButton);
+      row.appendChild(availabilityCell);
+
+      tableBody.appendChild(row);
+    }
+  }
 }
 
-//THIS WILL BE THE HOME SCTRUCTURE FOR THE CARS
- let renderCars = function() {
-    
-    let html = `<div class="row">`
-    cars.forEach(function(car, index)
-    {
-        {  
-          if(car.isDeleted == false){
-        html += `
-            
-        <table> 
-            <tbody>
-            <tr>
-                <td class="img"><img src="${car.carImg}" alt="${car.carName}"></td>
-                <td class="shortDesc">
-                    <h1 class="name"><strong>${car.carName}</strong></h1>
-                    <p>${car.shortDesc}</p>
-                </td>
-                <td class="price">
-                    <strong>$${car.carPrice}</strong>
-                </td>
-                <td style="text-align: center;">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#carModal-${car.vinID}">View Details</button>
-                    <br>
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#availModal-${car.vinID}">Check Availability</button>
-                </td>
-            </tr>
-            
-          
-            <div class="modal fade" id="carModal-${car.vinID}" 
-            tabindex="-1" aria-labelledby="carModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <center><h5 class="modal-title" id="carModalLabel">Car Details</h5></center>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-5 pt-0">
-                  <div class="row">
-                    <div id="features">
-                      <h1 class="name"><strong>${car.carName}</strong></h1>
-                      <p><strong>$${car.carPrice}</strong></p>
-                      <p>Miles per Gallon: ${car.Mpg}</p>
-                      <p>Travel Range: ${car.range}</p>
-                      <p>Horsepower: ${car.horsePower}</p>
-                      <p>Drive: ${car.drive}</p>
-                      <p>Transmission: ${car.transmission}</p>
-                      <p>Color: ${car.color}</p>
-                      <p>Seats up to: ${car.seat}</p>
-                      <hr>
+//ADD CAR IN ADMIN
+async function addNewCar(event) {
+  // form.addEventListener("submit", async function (e) {
+    event.preventDefault();
 
-                    <div class="compare">
-                    <center>
-                        <h4>Compare to Generic Gas Car</h4>
-                        <form id="compareForm">
-                        <div class="form-group">
-                          <label for="avgMiles">Average Miles Driven Per Year:</label>
-                          <p style="color: gray;"> 13,500 Miles <p/>
-                        </div>
-                        <div class="form-group">
-                          <label for="gasPrice">Average Gas Price in Your Area:</label>
-                          <p style="color: gray;"> $3.150<p/>
-                        </div>
-                        <div class="form-group">
-                          <label for="yearsDriven">Years Intended to Drive:</label>
-                          <p style="color: gray;"> 12 Years <p/>
-                        </div>
-                        <div class="form-group">
-                          <label for="electricCost">Average Cost of Electric:</label>
-                          <p style="color: gray;"> 1,214 kWh = $154.30 <p/>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Compare</button>
-                      </form>
-                    </center>
-                  </div>
-                      
-                    </div>
-                  </div>
-                </div> 
-                </div>         
-              </div>
-            </div>
-          <div class="modal-backdrop fade show"></div>
-          </div>
+    const newCar = {
+      carImage: document.getElementById("car-img").value,
+      carType: document.getElementById("car-type").value, //ADD A DROP DOWN SELECTION TO THE CAR FORM TO CHOOSE BETWEEN THE 4 TYPES
+      carName: document.getElementById("car-name").value,
+      shortDescrip: document.getElementById("short-desc").value,
+      carPrice: document.getElementById("car-price").value,
+      range: document.getElementById("travel-range").value,
+      horsePower: document.getElementById("horse-power").value,
+      drive: document.getElementById("drive").value,
+      transmission: document.getElementById("transmission").value,
+      mpg: document.getElementById("mpg").value,
+      color: document.getElementById("car-color").value,
+      seat: document.getElementById("car-seat").value,
+    };
+  cars.unshift(newCar);
+  console.log(newCar);
+  addCar(newCar);
+  // blankFields();
+}
 
-          <div class="modal fade" id="availModal-${car.vinID}" tabindex="-1" aria-labelledby="availModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <center><h5 class="modal-title" id="availModalLabel-${car.vinID}">Car Availability</h5></center>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-          <div class="modal-body p-5 pt-0">
-            <br
-            <form class="">
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control rounded-3" id="floatingName-${car.vinID}" placeholder="First Last">
-                <label for="floatingInput">Full Name</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" id="floatingEmail-${car.vinID}" placeholder="name@email.com">
-                <label for="floatingPassword">Email</label>
-              </div>
-              <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" onclick="submitAvailForm(${car.vinID})" data-bs-toggle="modal" data-bs-target="#availModal-${car.vinID}">Submit</button>
-              <center><small class="text-muted">Check inbox to view availability on this vehicle</small></center>
-            </form>
-          </div>
-        </div>
-        </tbody>
-            </table>
- `
-        }
-      }
+//ADD CAR TO DATABASE
+async function addCar(newCar) {
+  fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newCar),
+  })
+    .then((response) => {
+      console.log(response);
+      return response;
     })
-    
-  
-
-    html += `</div>`
-    document.getElementById("car").innerHTML = html;
-
-    localStorage.setItem('AllMyCars', JSON.stringify(cars))
-
-    const addCarForm = document.getElementById('#new-car');
-    addCarForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        // add the new car to the cars array
-        const newCar = {
-            carImg: document.getElementById('car-img').value,
-            carName: document.getElementById('car-name').value,
-            shortDescript: document.getElementById('short-desc').value,
-            carPrice: document.getElementById('car-price').value,
-            range: document.getElementById('travel-range').value,
-            horsePower: document.getElementById('horse-power').value,
-            drive: document.getElementById('drive').value,
-            transmission: document.getElementById('transmission').value,
-            Mpg: document.getElementById('mpg').value,
-            carColor: document.getElementById('car-color').value,
-            seat: document.getElementById('car-seat').value
-        };
-        cars.push(newCar);
-        // render the updated cars array
-        renderCars();
+    .catch((error) => {
+      console.log(error);
     });
 }
 
-
-let renderAdmin = function () {
-  let html = `<div class="row">`;
-  cars.forEach(function (car) {
-    {
-      if(car.isDeleted == false){
-      html += `
-      <table> 
-        <tbody>
-          <tr>
-              <td id="Aimg"><img src="${car.carImg}" alt="${car.carName}"></td>
-              <td class="Adescription">
-              <p><strong>Year, Make, Model:</strong></p> 
-                <p id="Aname" contenteditable="true">${car.carName}</p>
-                <p><strong>Description:</strong></p> 
-                <p id="Ashort-desc" contenteditable="true">${car.shortDesc}</p>
-                <p><strong>Range:</strong></p>
-                <p id="Arange" contenteditable="true"> ${car.range}</p>
-                <p><strong>Horsepower:</strong></p> 
-                <p id="Ahorse-power" contenteditable="true"> ${car.horsePower}</p>
-                <p><strong>Drive:</strong></p> 
-                <p id="Adrive" contenteditable="true"> ${car.drive}</p>
-                <p><strong>Transmission:</strong></p> 
-                <p id="Atransmission" contenteditable="true"> ${car.transmission}</p>
-                <p><strong>Car MPGE:</strong></p>
-                <p id="Ampg" contenteditable="true"> ${car.Mpg}</p>
-                <p><strong>Number of Seats:</strong></p>
-                <p id="Acar-color" contenteditable="true"> ${car.seat}</p>
-                <p><strong>Car Color:</strong></p>
-                <p id="Acar-seat" contenteditable="true"> ${car.color}</p>
-                
-              </td>
-              
-              <td 
-              <p><strong>Price:</strong></p>
-              <p id="Aprice" contenteditable="true">$${car.carPrice}</p>
-              </td>
-              <td style="text-align: center;">  
-                <button onclick="deleteCar(${car.vinID})" id="delete-button" class="btn btn-primary">Delete</button>
-                <br>
-                <button onclick="editCar(${car.vinID}) type="button" class="btn btn-outline-primary save-btn">Save</button>
-              </td>
-          </tr>
-        <tbody>
-      <table>`
-    }
-    // 1. range// travel-range
-    // 2. horsePower// horse-power
-    // 3. drive// drive 
-    // 4. transmission// transmission
-    // 5. color// car-color
-    // 6. Mpg// mpg
-    // 7. seat// car-seat
+//POPULATES THE ADMIN TABLE
+async function populateAdmin() {
+  let sortOption = "low";
+  if (adminTableBody) {
+    adminTableBody.innerHTML = " ";
   }
-  });
-  html += `</div>`;
-  document.getElementById("Acar").innerHTML = html;
+  const carsData = await getCars(sortOption);
+  console.log(carsData);
 
-  localStorage.setItem("AllMyCars", JSON.stringify(cars));
-};
+  for (let i = 0; i < carsData.length; i++) {
+    if (carsData[i].isDeleted) {
+      const row = document.createElement("tr");
 
+      const name = document.createElement("input");
+      name.value = carsData[i].carName;
+      const desc = document.createElement("textarea");
+      desc.value = carsData[i].shortDescrip;
+      const price = document.createElement("input");
+      price.value = carsData[i].carPrice;
+      const mpg = document.createElement("input");
+      mpg.value = carsData[i].mpg;
+      const range = document.createElement("input");
+      range.value = carsData[i].range;
+      const horsePower = document.createElement("input");
+      horsePower.value = carsData[i].horsePower;
+      const drive = document.createElement("input");
+      drive.value = carsData[i].drive;
+      const transmission = document.createElement("input");
+      transmission.value = carsData[i].transmission;
+      const color = document.createElement("input");
+      color.value = carsData[i].color;
+      const seat = document.createElement("input");
+      seat.value = carsData[i].seat;
 
+      const imgCell = document.createElement("td");
+      const img = document.createElement("img");
+      img.src = carsData[i].carImage;
+      imgCell.appendChild(img);
+      row.appendChild(imgCell);
 
-function deleteCar(myID) {
-  console.log("In delete car 2")
-  console.log(myID)
-  let newCar = 1;
+      const nameCell = document.createElement("td");
+      const nameLabel = document.createElement("label");
+      nameLabel.innerText = "Name:";
+      const descLabel = document.createElement("label");
+      descLabel.innerText = "Description:";
+      nameCell.appendChild(nameLabel);
+      nameCell.appendChild(name);
+      nameCell.appendChild(descLabel);
+      nameCell.appendChild(desc);
+      row.appendChild(nameCell);
 
-  for(var i = 0; i < cars.length; i++){
-      if(myID == cars[i].vinID){
-          newCar = {
-              "carImg": cars[i].vinID, 
-              "vinID": cars[i].vinID, 
-              "carName" : cars[i].carName,
-              "carPrice" : cars[i].carPrice, 
-              "shortDesc": cars[i].shortDesc, 
-              "range": cars[i].range, 
-              "horsePower": cars[i].horsePower, 
-              "drive": cars[i].drive,
-              "transmission": cars[i].transmission,
-              "color": cars[i].color,
-              "Mpg": cars[i].Mpg,
-              "seat": cars[i].seat,
-              "isDeleted": true
-            }
+      const priceCell = document.createElement("td");
+      const priceLabel = document.createElement("label");
+      priceLabel.innerText = "Price:";
+      const mpgLabel = document.createElement("label");
+      mpgLabel.innerText = "MPG:";
+      priceCell.appendChild(priceLabel);
+      priceCell.appendChild(price);
+      priceCell.appendChild(mpgLabel);
+      priceCell.appendChild(mpg);
+      row.appendChild(priceCell);
+
+      const rangeCell = document.createElement("td");
+      const rangeLabel = document.createElement("label");
+      rangeLabel.innerText = "Range:";
+      const hpLabel = document.createElement("label");
+      hpLabel.innerText = "Horse Power:";
+      rangeCell.appendChild(rangeLabel);
+      rangeCell.appendChild(range);
+      rangeCell.appendChild(hpLabel);
+      rangeCell.appendChild(horsePower);
+      row.appendChild(rangeCell);
+
+      const driveCell = document.createElement("td");
+      const driveLabel = document.createElement("label");
+      driveLabel.innerText = "Drive:";
+      const transLabel = document.createElement("label");
+      transLabel.innerText = "Transmission:";
+      driveCell.appendChild(driveLabel);
+      driveCell.appendChild(drive);
+      driveCell.appendChild(transLabel);
+      driveCell.appendChild(transmission);
+      row.appendChild(driveCell);
+
+      const colorCell = document.createElement("td");
+      const colorLabel = document.createElement("label");
+      colorLabel.innerText = "Color:";
+      const seatLabel = document.createElement("label");
+      seatLabel.innerText = "Seats:";
+      colorCell.appendChild(colorLabel);
+      colorCell.appendChild(color);
+      colorCell.appendChild(seatLabel);
+      colorCell.appendChild(seat);
+      row.appendChild(colorCell);
+
+      const saveCell = document.createElement("td");
+      const saveButton = document.createElement("button");
+      saveButton.classList.add("btn-outline-primary");
+      saveButton.innerText = "Save";
+      saveButton.addEventListener("click", () => {
+        const updatedCar = {
+          carName: name.innerText,
+          shortDescrip: desc.innerText,
+          carRange: range.innerText,
+          horsePower: horsePower.innerText,
+          drive: drive.innerText,
+          transmission: transmission.innerText,
+          color: color.innerText,
+          mpg: mpg.innerText,
+          seat: seat.innerText,
+          carPrice: price.innerText,
+          carImage: img.src,
+          CarVIN: carsData[i].vinID,
+          isDeleted: false,
+        };
+        editCar(updatedCar.vinID).then(
+          setTimeout(() => {
+            location.reload();
+          }, 3000)
+        );
+      });
+      saveCell.appendChild(saveButton);
+
+      const deleteButton = document.createElement("button");
+      deleteButton.classList.add("btn-outline-danger");
+      deleteButton.innerText = "Delete";
+      deleteButton.addEventListener("click", () => {
+        deleteCar(carsData[i].vinID).then(
+          setTimeout(() => {
+            location.reload();
+          }, 3000)
+        );
+      });
+      saveCell.appendChild(deleteButton);
+      row.appendChild(saveCell);
+
+      adminTableBody.appendChild(row);
     }
-    //put method will need to go here
-  renderAdmin()
-  console.log("In delete car 2")
+  }
+
+  form.addEventListener("submit", addNewCar);
 }
-}
 
-function editCar(myID) {
-  console.log("In edit car 1(start)")
-  console.log(myID)
-  const updateImg = document.getElementById('Aimg').value;
-  const updateName = document.getElementById('Aname').value;
-  const updateShortDesc = document.getElementById('Ashort-desc').value;
-  const updatePrice = document.getElementById('Aprice').value;
-  const updateRange = document.getElementById('Arange').value;
-  const updateHorsepower = document.getElementById('Ahorse-power').value;
-  const updateDrive = document.getElementById('Adrive').value;
-  const updateTrans = document.getElementById('Atransmission').value;
-  const updateMpg = document.getElementById('Ampg').value;
-  const updateColor = document.getElementById('Acar-color').value;
-  const updateSeat = document.getElementById('Acar-seat').value;
+//EDIT A CAR
+async function editCar(id) {
+  const car = await getCarById(id);
+  const type = "edit";
 
-  let newCar = 1;
+  if (!car) {
+    console.error(`Car with ID ${id} not found`);
+    return;
+  }
+  const index = cars.findIndex((car) => car.vinID === id);
+  if (index >= 0) {
+    cars[index].carImg;
+    cars[index].carName;
+    cars[index].carPrice;
+    cars[index].shortDesc;
+    cars[index].range;
+    cars[index].horsePower;
+    cars[index].drive;
+    cars[index].transmission;
+    cars[index].color;
+    cars[index].Mpg;
+    cars[index].seat;
+  }
 
-  for(var i = 0; i < cars.length; i++){
-      if(myID == cars[i].vinID){
-          newCar = {
-            ...cars, 
-              "carImg": updateImg,
-              "carName" : updateName, 
-              "carPrice" : updatePrice, 
-              "shortDesc": updateShortDesc,
-              "range": updateRange,
-              "horsePower": updateHorsepower,
-              "drive": updateDrive,
-              "transmission": updateTrans,
-              "color": updateColor,
-              "Mpg": updateMpg,
-              "seat": updateSeat,
-            }
-    }
-    //put method will need to go here
-  renderAdmin()
-  console.log("In edit car 2(finish)")
-}
-}
-  
+  const updateImg = document.getElementById("Aimg");
+  const updateName = document.getElementById("Aname");
+  const updateShortDesc = document.getElementById("Ashort-desc");
+  const updatePrice = document.getElementById("Aprice");
+  const updateRange = document.getElementById("Arange");
+  const updateHorsepower = document.getElementById("Ahorse-power");
+  const updateDrive = document.getElementById("Adrive");
+  const updateTrans = document.getElementById("Atransmission");
+  const updateMpg = document.getElementById("Ampg");
+  const updateColor = document.getElementById("Acar-color");
+  const updateSeat = document.getElementById("Acar-seat");
 
-
-       
-  
-
-
-//THIS WILL ADD THE CAR AND STORE IT IN LOCAL STORAGE
-const addCarForm = document.getElementById('new-car'); addCarForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const carImg = document.getElementById('car-img').files[0]; // get the selected image file
-  var reader = new FileReader(); // create a FileReader object
-  count = 100500;
-  reader.onload = function() {
-    // when the file is loaded, store the base64 encoded image data in the cars array
-
-    const newCar = {
-      carImg: reader.result,
-      vinID: count + 1,
-      carName: e.target.elements.carName.value,
-      carPrice: e.target.elements.carPrice.value,
-      shortDescript: e.target.elements.shortDescript.value,
-      range: e.target.elements.travelRange.value,
-      horsePower: e.target.elements.horsePower.value,
-      drive: e.target.elements.drive.value,
-      Mpg: e.target.elements.Mpg.value,
-      transmission: e.target.elements.transmission.value,
-      color: e.target.elements.carColor.value
-    }
-    cars.unshift(newCar);
-
-    renderCars(cars);
-    blankFields();
+  const updatedCar = {
+    ...car,
+    carImg: updateImg.value,
+    carName: updateName.value,
+    carPrice: updatePrice.value,
+    shortDesc: updateShortDesc.value,
+    range: updateRange.value,
+    horsePower: updateHorsepower.value,
+    drive: updateDrive.value,
+    transmission: updateTrans.value,
+    color: updateColor.value,
+    Mpg: updateMpg.value,
+    seat: updateSeat.value,
   };
-  reader.readAsDataURL(carImg); // read the image file as a data URL
-  count++;
-});
-
-function handleOnLoad(){
-  //readInFile()
-  renderCars()
+  await updateCar(id, updatedCar, type);
 }
 
+//UPDATES THE CAR MODIFICATIONS
+async function updateCar(id, car, type) {
+  let updateObj = car;
+  if (type === "edit") {
+    updateObj = { ...car };
+  } else if (type === "delete") {
+    updateObj = { ...car, isDeleted: true };
+  }
 
+  fetch(`${url}/${id}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updateObj),
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
+//DELETE A CAR
+async function deleteCar(id) {
+  const car = await getCarById(id);
+  const type = "delete";
 
+  if (!car) {
+    console.error(`Car with ID ${id} not found`);
+    return;
+  }
 
+  const index = cars.findIndex((car) => car.vinID === id);
+  if (index >= 0) {
+    cars[index].isDeleted = true;
+  }
+  const updatedCar = {
+    ...car,
+    isDeleted: true,
+  };
 
-// <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#carModal">Delete</button>
-
-
-
-
-
-
-
-
-
-
-// function addNewCar(event) {
-//   const form = 
-//   event.preventDefault();
-
-//   var carImg = document.querySelector('#car-img').files[0]; // get the selected image file
-//   var reader = new FileReader();
-//   const carImg = document.getElementById(reader.result);
-//   const vinID = 2
-//   const carName = document.getElementById("carName");
-//   const carPrice = document.getElementById("carPrice");
-//   const shortDesc = document.getElementById("shortDescript");
-//   const range = document.getElementById("travelRange");
-//   const horsePower = document.getElementById("horsePower");
-//   const drive = document.getElementById("drive");
-//   const transmission = document.getElementById("transmission");
-//   const color = document.getElementById("carColor");
-  
-
-//   const newCar = {
-//     carImg: carImg.value,
-//       vinID: vinID.value,
-//       carName: carName.value,
-//       carPrice: carPrice.value,
-//       shortDesc: shortDesc.value,
-//       range: travelRange.value,
-//       horsePower: horsePower.value,
-//       drive: drive.value,
-//       transmission: transmission.value,
-//       color: color.value
-
-//   };
-//   cars.unshift(newCar);
-//   console.log(newCar);
-//   renderCars(cars)
-// }
-
-
-
-
-
-
-
-
-
-
-
-
+  await updateCar(id, updatedCar, type);
+}

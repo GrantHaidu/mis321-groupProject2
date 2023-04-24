@@ -10,9 +10,9 @@ namespace api.Models
 
         public string carName { get; set; }
 
-        public string? carImage { get; set; }
+        public string carImage { get; set; }
 
-        public double carPrice { get; set; }
+        public string carPrice { get; set; }
 
         public int mpg { get; set; }
 
