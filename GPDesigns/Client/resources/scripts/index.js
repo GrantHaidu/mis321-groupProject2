@@ -665,19 +665,20 @@ async function updateCar(id, car, type) {
   
 // }
 async function deleteCar(id) {
+  
   let car = 0;
   for (var i = 0; i < cars.length; i++) {
     if (cars[i].carVIN == id) {
       
       car = {
         ...cars[i],
-        deleted : !cars[i].isDeleted
-        
+        isDeleted : !cars[i].isDeleted
       };
       console.log(car)
     }
   }
-  await fetch(`${url}/${id}`, {
+  debugger
+  await fetch(url +"/"+id, {
     method: "PUT",
     headers: {
       accept: "*/*",
@@ -685,6 +686,7 @@ async function deleteCar(id) {
     },
     body: JSON.stringify(car),
   });
+  
 }
 
 
